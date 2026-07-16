@@ -53,7 +53,11 @@ const ZEFFY_CAMPAIGNS = {
   donate: '',
 };
 
-/* ---------- NAV ---------- */
+/* ---------- NAV ----------
+   Logo: drop your SVG file into the project as logo.svg, then swap the
+   <span className="logo-mark"> block below for:
+   <img src="logo.svg" alt="WholeMind Resilience" />
+*/
 const NAV_ITEMS = [
   ['home', 'Home'],
   ['about', 'About Us'],
@@ -65,12 +69,26 @@ const NAV_ITEMS = [
   ['contact', 'Contact'],
 ];
 
+function LogoMark() {
+  // Placeholder mark (soft leaf/wave) until the real SVG logo is dropped in.
+  return (
+    <svg className="logo-mark" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="17" cy="17" r="16" fill="var(--sage-tint)" />
+      <path d="M9 19c3-8 10-11 16-8-2 7-9 11-16 8Z" fill="var(--sage)" />
+      <circle cx="22" cy="12" r="2.4" fill="var(--gold)" />
+    </svg>
+  );
+}
+
 function Nav({ route }) {
   const isProgrammes = route.startsWith('programmes');
   return (
     <nav className="site-nav">
       <div className="nav-inner">
-        <button className="logo" onClick={() => go('home')}>WholeMind Resilience</button>
+        <button className="logo" onClick={() => go('home')}>
+          <LogoMark />
+          WholeMind Resilience
+        </button>
         <ul className="nav-links">
           {NAV_ITEMS.map(([key, label]) => (
             <li key={key}>
@@ -83,6 +101,45 @@ function Nav({ route }) {
         </ul>
       </div>
     </nav>
+  );
+}
+
+/* ---------- SUBSCRIBE BANNER ----------
+   Shown on every page, just above the footer — same pattern as
+   oxfordmindfulness.org. Wire the form's onSubmit up to whichever
+   mailing list tool is chosen (Mailchimp, Brevo/Sendinblue, etc.);
+   for now it just confirms in the UI without sending anywhere.
+*/
+function SubscribeBanner() {
+  const [email, setEmail] = useState('');
+  const [sent, setSent] = useState(false);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    // TODO: replace with a real call to your mailing list provider
+    setSent(true);
+  }
+
+  return (
+    <div className="subscribe-band">
+      <h2>Mindfulness. Straight to your inbox.</h2>
+      <p>Get updates on courses, events and wellbeing resources.</p>
+      {sent ? (
+        <p style={{ color: '#fff', fontWeight: 600 }}>Thanks — you're subscribed.</p>
+      ) : (
+        <form className="subscribe-form" onSubmit={handleSubmit}>
+          <input
+            type="email"
+            required
+            placeholder="Your email address"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
+          <button type="submit">Subscribe</button>
+        </form>
+      )}
+      <p className="subscribe-note">No spam — unsubscribe anytime.</p>
+    </div>
   );
 }
 
@@ -107,22 +164,28 @@ function Home() {
   return (
     <div>
       <div className="hero">
+        <div className="blob b1"></div>
+        <div className="blob b2"></div>
         <div className="eyebrow">WholeMind Resilience</div>
         <h1>Helping people, teams and communities reduce stress, prevent burnout and build lasting resilience.</h1>
         <p className="sub">Evidence-based approaches that support mental wellbeing.</p>
       </div>
-      <div className="audience-grid">
-        <div className="audience-card" onClick={() => go('programmes-individuals')}>
-          <h3>For Individuals &amp; Communities</h3>
-          <p>Mindfulness courses, sessions, coaching and community workshops.</p>
-        </div>
-        <div className="audience-card" onClick={() => go('programmes-professionals')}>
-          <h3>For Professionals &amp; Teams</h3>
-          <p>CMR for teams, reflective practice, and stress &amp; burnout workshops.</p>
-        </div>
-        <div className="audience-card" onClick={() => go('programmes-systems')}>
-          <h3>For Systems &amp; Providers</h3>
-          <p>Phased return, safe leader space, and scalable neighbourhood prevention.</p>
+      <div className="band band-sage">
+        <div className="band-inner">
+          <div className="audience-grid">
+            <div className="audience-card" onClick={() => go('programmes-individuals')}>
+              <h3>For Individuals &amp; Communities</h3>
+              <p>Mindfulness courses, sessions, coaching and community workshops.</p>
+            </div>
+            <div className="audience-card" onClick={() => go('programmes-professionals')}>
+              <h3>For Professionals &amp; Teams</h3>
+              <p>CMR for teams, reflective practice, and stress &amp; burnout workshops.</p>
+            </div>
+            <div className="audience-card" onClick={() => go('programmes-systems')}>
+              <h3>For Systems &amp; Providers</h3>
+              <p>Phased return, safe leader space, and scalable neighbourhood prevention.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -468,6 +531,7 @@ function App() {
     <React.Fragment>
       <Nav route={route} />
       {page}
+      <SubscribeBanner />
       <Footer />
     </React.Fragment>
   );
