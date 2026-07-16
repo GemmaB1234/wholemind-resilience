@@ -99,7 +99,28 @@
   .audience-card h3{font-size:17px; color:var(--sage-deep); margin-bottom:8px;}
   .audience-card p{font-size:13.5px; color:var(--muted); margin:0;}
 
-  /* SUBSCRIBE BANNER */
+  /* IMAGES */
+  .img-placeholder{
+    background:linear-gradient(135deg, var(--sage-tint), var(--gold-tint));
+    border-radius:20px; display:flex; align-items:center; justify-content:center;
+    color:var(--muted); font-size:12.5px; text-align:center; padding:18px;
+    width:100%; line-height:1.5;
+  }
+  .site-image{ width:100%; object-fit:cover; border-radius:20px; display:block; }
+  .hero-flex{ display:flex; align-items:center; gap:48px; max-width:1040px; margin:0 auto; text-align:left; flex-wrap:wrap; }
+  .hero-flex .hero-text{ flex:1 1 420px; text-align:left; }
+  .hero-flex .hero-text .eyebrow, .hero-flex .hero-text h1, .hero-flex .hero-text p.sub{ margin-left:0; margin-right:0; }
+  .hero-flex .hero-image{ flex:1 1 320px; min-width:260px; aspect-ratio:4/3; }
+  @media (max-width:820px){ .hero-flex{ text-align:center; } .hero-flex .hero-text{ text-align:center; } }
+
+  .card-image{ aspect-ratio:4/3; margin-bottom:16px; }
+  .about-image{ max-width:760px; margin:0 auto 40px; aspect-ratio:16/9; }
+
+  /* LOGO & ICONS */
+  .logo img.woodmark{ height:52px; width:auto; display:block; }
+  .hub-icon{ width:84px; height:84px; margin:0 auto 18px; display:block; }
+  .item-icon{ width:44px; height:44px; margin-bottom:10px; display:block; }
+
   .subscribe-band{
     background:var(--sage-deep); color:#F3EFE6; text-align:center; padding:64px 24px;
   }
