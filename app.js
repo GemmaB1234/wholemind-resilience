@@ -46,14 +46,14 @@ function SiteImage({ src, alt, caption, className }) {
 }
 
 /* ---------- ZEFFY EMBED ----------
-   Using a plain link straight to the Zeffy campaign page rather than
-   the zeffy-form-link + script-tag method. That method relies on
-   Zeffy's script scanning the page for buttons ONCE when it first
-   loads — since this site is a single-page app, buttons that appear
-   later (e.g. after clicking "Events" in the nav) never get wired up.
-   A direct link has no such timing dependency and always works.
+   Renders the Zeffy form inline, in place, when "Book Now" is clicked —
+   stays on the same page, no new tab, and no dependency on Zeffy's
+   script (which didn't reliably trigger on this site's single-page-app
+   navigation). Just needs the campaign's embed URL.
 */
 function ZeffyEmbed({ zeffyUrl, label }) {
+  const [open, setOpen] = useState(false);
+
   if (!zeffyUrl) {
     return (
       <div style={{ padding: 16, border: '1px dashed var(--line)', borderRadius: 8, fontSize: 13, color: 'var(--muted)' }}>
@@ -62,8 +62,22 @@ function ZeffyEmbed({ zeffyUrl, label }) {
       </div>
     );
   }
+
+  if (!open) {
+    return (
+      <button className="cta-btn" onClick={() => setOpen(true)}>{label || 'Book Now'}</button>
+    );
+  }
+
   return (
-    <a className="cta-btn" href={zeffyUrl} target="_blank" rel="noopener noreferrer">{label || 'Book Now'}</a>
+    <div style={{ width: '100%' }}>
+      <iframe
+        title="Zeffy booking form"
+        src={zeffyUrl}
+        style={{ width: '100%', minHeight: 640, border: 'none', borderRadius: 12 }}
+        allow="payment"
+      />
+    </div>
   );
 }
 
@@ -372,12 +386,14 @@ function Events() {
       </div>
       <div className="session-list">
         {SESSIONS.map(s => (
-          <div className={'session-card' + (s.mode === 'online' ? ' online' : '')} key={s.title}>
-            <div>
-              <h4>{s.title}</h4>
-              <div className="meta">{s.date} · {s.mode === 'online' ? 'Online' : 'In-person'} · {s.note}</div>
+          <div className={'session-card' + (s.mode === 'online' ? ' online' : '')} key={s.title} style={{ flexDirection: 'column', alignItems: 'stretch' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+              <div>
+                <h4>{s.title}</h4>
+                <div className="meta">{s.date} · {s.mode === 'online' ? 'Online' : 'In-person'} · {s.note}</div>
+              </div>
+              <ZeffyEmbed zeffyUrl={ZEFFY_CAMPAIGNS[s.zeffyKey]} label="Book Now" />
             </div>
-            <ZeffyEmbed zeffyUrl={ZEFFY_CAMPAIGNS[s.zeffyKey]} label="Book Now" />
           </div>
         ))}
       </div>
