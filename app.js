@@ -46,40 +46,34 @@ function SiteImage({ src, alt, caption, className }) {
 }
 
 /* ---------- ZEFFY EMBED ----------
-   Replace each zeffyUrl below with the real embed link from your Zeffy
-   campaign (Zeffy dashboard > campaign > Share > Embed on my website).
-   Embedded Zeffy forms only show payment/booking fields — no logo,
-   image or description — so page copy around the embed carries the
-   branding and context.
+   Zeffy's real embed method is two parts, not a simple link:
+   1. A button with a `zeffy-form-link` attribute pointing at the
+      campaign's embed URL (Zeffy dashboard > campaign > Share >
+      "Paste the link on the button" > "First, add to a button").
+   2. A <script> tag added ONCE to the page (in index.html's <head>) —
+      this is Zeffy's own script that makes all zeffy-form-link buttons
+      on the page work. It only needs to go in index.html once, not
+      once per button.
 */
 function ZeffyEmbed({ zeffyUrl, label }) {
-  const [open, setOpen] = useState(false);
-  if (!open) {
-    return (
-      <button className="cta-btn" onClick={() => setOpen(true)}>{label || 'Book Now'}</button>
-    );
-  }
   if (!zeffyUrl) {
     return (
       <div style={{ padding: 16, border: '1px dashed var(--line)', borderRadius: 8, fontSize: 13, color: 'var(--muted)' }}>
-        Zeffy embed URL not set yet for this item — paste the campaign's embed link into the
+        Zeffy link not set yet for this item — paste the campaign's <code>zeffy-form-link</code> URL into the
         <code> ZEFFY_CAMPAIGNS </code> object in app.js.
       </div>
     );
   }
   return (
-    <iframe
-      title="Zeffy form"
-      src={zeffyUrl}
-      style={{ width: '100%', minHeight: 620, border: 'none', borderRadius: 8 }}
-      allow="payment"
-    />
+    <button className="cta-btn" zeffy-form-link={zeffyUrl}>{label || 'Book Now'}</button>
   );
 }
 
-/* Map each session/campaign to its real Zeffy embed URL once created */
+/* Map each session/campaign to its real Zeffy embed URL once created.
+   This is the value from "First, add to a button on your website" —
+   e.g. https://www.zeffy.com/embed/ticketing/wholemind-resilience-... */
 const ZEFFY_CAMPAIGNS = {
-  'cmr-course': '',
+  'cmr-course': 'https://www.zeffy.com/embed/ticketing/wholemind-resilience?modal=true',
   'mindfulness-dropin': '',
   'community-workshop-norwich': '',
   'cmr-for-teams': '',
@@ -380,14 +374,12 @@ function Events() {
       </div>
       <div className="session-list">
         {SESSIONS.map(s => (
-          <div className={'session-card' + (s.mode === 'online' ? ' online' : '')} key={s.title} style={{ flexDirection: 'column', alignItems: 'stretch' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
-              <div>
-                <h4>{s.title}</h4>
-                <div className="meta">{s.date} · {s.mode === 'online' ? 'Online' : 'In-person'} · {s.note}</div>
-              </div>
-              <ZeffyEmbed zeffyUrl={ZEFFY_CAMPAIGNS[s.zeffyKey]} label="Book Now" />
+          <div className={'session-card' + (s.mode === 'online' ? ' online' : '')} key={s.title}>
+            <div>
+              <h4>{s.title}</h4>
+              <div className="meta">{s.date} · {s.mode === 'online' ? 'Online' : 'In-person'} · {s.note}</div>
             </div>
+            <ZeffyEmbed zeffyUrl={ZEFFY_CAMPAIGNS[s.zeffyKey]} label="Book Now" />
           </div>
         ))}
       </div>
