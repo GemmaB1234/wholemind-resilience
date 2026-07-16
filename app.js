@@ -61,6 +61,7 @@ const NAV_ITEMS = [
   ['events', 'Events'],
   ['news', 'News'],
   ['involved', 'Get Involved'],
+  ['participants', 'Course Participants'],
   ['contact', 'Contact'],
 ];
 
@@ -367,11 +368,37 @@ function PolicyPage({ name }) {
   password lives in the JS bundle and is not truly private.
   Swap PASSWORD below for a fetch() call to an API route before launch.
 */
-const PARTICIPANTS_PASSWORD = 'changeme';
-
-function PasswordGate({ correctPassword, onSuccess, label }) {
+/*
+  This gate now checks the password via a Vercel serverless function
+  (/api/check-password.js), so the real password lives only in Vercel's
+  environment variables — never in this file or the browser bundle.
+*/
+function PasswordGate({ onSuccess, label }) {
   const [value, setValue] = useState('');
   const [error, setError] = useState(false);
+  const [checking, setChecking] = useState(false);
+
+  async function handleSubmit() {
+    setChecking(true);
+    setError(false);
+    try {
+      const res = await fetch('/api/check-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: value }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        onSuccess();
+      } else {
+        setError(true);
+      }
+    } catch (e) {
+      setError(true);
+    }
+    setChecking(false);
+  }
+
   return (
     <div className="gate">
       <h2>{label}</h2>
@@ -383,8 +410,8 @@ function PasswordGate({ correctPassword, onSuccess, label }) {
         placeholder="Password"
       />
       {error && <p className="error">That password isn't right — please check and try again.</p>}
-      <button className="cta-btn" onClick={() => value === correctPassword ? onSuccess() : setError(true)}>
-        Unlock
+      <button className="cta-btn" onClick={handleSubmit} disabled={checking}>
+        {checking ? 'Checking…' : 'Unlock'}
       </button>
     </div>
   );
@@ -393,7 +420,7 @@ function PasswordGate({ correctPassword, onSuccess, label }) {
 function CourseParticipants() {
   const [unlocked, setUnlocked] = useState(false);
   if (!unlocked) {
-    return <PasswordGate correctPassword={PARTICIPANTS_PASSWORD} onSuccess={() => setUnlocked(true)} label="Course Participants" />;
+    return <PasswordGate onSuccess={() => setUnlocked(true)} label="Course Participants" />;
   }
   return (
     <SimplePage eyebrow="Course Participants" title="Your course materials">
