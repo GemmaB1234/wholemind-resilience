@@ -187,51 +187,23 @@ function Home() {
       <div className="hero">
         <div className="blob b1"></div>
         <div className="blob b2"></div>
-        <div className="hero-flex">
-          <div className="hero-text">
-            <div className="eyebrow">WholeMind Resilience</div>
-            <h1>Helping people, teams and communities reduce stress, prevent burnout and build lasting resilience.</h1>
-            <p className="sub">Evidence-based approaches that support mental wellbeing.</p>
-          </div>
-          <SiteImage
-            className="hero-image"
-            src="img/hero.jpg"
-            alt="A calm, everyday scene reflecting steadiness and wellbeing"
-            caption="Photo: a calm outdoor scene or quiet, everyday moment — e.g. someone walking a countryside path. Save as img/hero.jpg"
-          />
-        </div>
+        <div className="eyebrow">WholeMind Resilience</div>
+        <h1>Helping people, teams and communities reduce stress, prevent burnout and build lasting resilience.</h1>
+        <p className="sub">Evidence-based approaches that support mental wellbeing.</p>
       </div>
 
       <div className="band band-sage">
         <div className="band-inner">
           <div className="audience-grid">
             <div className="audience-card" onClick={() => go('programmes-individuals')}>
-              <SiteImage
-                className="card-image"
-                src="img/individuals.jpg"
-                alt="A calm, everyday moment representing individual wellbeing"
-                caption="Photo: person on a quiet walk, or relaxed at home. Save as img/individuals.jpg"
-              />
               <h3>For Individuals &amp; Communities</h3>
               <p>Mindfulness courses, sessions, coaching and community workshops.</p>
             </div>
             <div className="audience-card" onClick={() => go('programmes-professionals')}>
-              <SiteImage
-                className="card-image"
-                src="img/professionals.jpg"
-                alt="Colleagues in a warm, calm conversation"
-                caption="Photo: two colleagues talking warmly, break-room or office setting. Save as img/professionals.jpg"
-              />
               <h3>For Professionals &amp; Teams</h3>
               <p>CMR for teams, reflective practice, and stress &amp; burnout workshops.</p>
             </div>
             <div className="audience-card" onClick={() => go('programmes-systems')}>
-              <SiteImage
-                className="card-image"
-                src="img/systems.jpg"
-                alt="A calm, focused leadership conversation"
-                caption="Photo: a calm 1:1 or small group conversation, leadership setting. Save as img/systems.jpg"
-              />
               <h3>For Systems &amp; Providers</h3>
               <p>Phased return, safe leader space, and scalable neighbourhood prevention.</p>
             </div>
