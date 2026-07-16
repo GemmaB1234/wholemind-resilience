@@ -46,26 +46,24 @@ function SiteImage({ src, alt, caption, className }) {
 }
 
 /* ---------- ZEFFY EMBED ----------
-   Zeffy's real embed method is two parts, not a simple link:
-   1. A button with a `zeffy-form-link` attribute pointing at the
-      campaign's embed URL (Zeffy dashboard > campaign > Share >
-      "Paste the link on the button" > "First, add to a button").
-   2. A <script> tag added ONCE to the page (in index.html's <head>) —
-      this is Zeffy's own script that makes all zeffy-form-link buttons
-      on the page work. It only needs to go in index.html once, not
-      once per button.
+   Using a plain link straight to the Zeffy campaign page rather than
+   the zeffy-form-link + script-tag method. That method relies on
+   Zeffy's script scanning the page for buttons ONCE when it first
+   loads — since this site is a single-page app, buttons that appear
+   later (e.g. after clicking "Events" in the nav) never get wired up.
+   A direct link has no such timing dependency and always works.
 */
 function ZeffyEmbed({ zeffyUrl, label }) {
   if (!zeffyUrl) {
     return (
       <div style={{ padding: 16, border: '1px dashed var(--line)', borderRadius: 8, fontSize: 13, color: 'var(--muted)' }}>
-        Zeffy link not set yet for this item — paste the campaign's <code>zeffy-form-link</code> URL into the
+        Zeffy link not set yet for this item — paste the campaign's URL into the
         <code> ZEFFY_CAMPAIGNS </code> object in app.js.
       </div>
     );
   }
   return (
-    <button className="cta-btn" zeffy-form-link={zeffyUrl}>{label || 'Book Now'}</button>
+    <a className="cta-btn" href={zeffyUrl} target="_blank" rel="noopener noreferrer">{label || 'Book Now'}</a>
   );
 }
 
@@ -73,7 +71,7 @@ function ZeffyEmbed({ zeffyUrl, label }) {
    This is the value from "First, add to a button on your website" —
    e.g. https://www.zeffy.com/embed/ticketing/wholemind-resilience-... */
 const ZEFFY_CAMPAIGNS = {
-  'cmr-course': 'https://www.zeffy.com/embed/ticketing/wholemind-resilience?modal=true',
+  'cmr-course': 'https://www.zeffy.com/embed/ticketing/wholemind-resilience',
   'mindfulness-dropin': '',
   'community-workshop-norwich': '',
   'cmr-for-teams': '',
