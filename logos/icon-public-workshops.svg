@@ -1,0 +1,7 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(100,100)">
+    <path d="M -40,32 Q 0,12 40,32" fill="none" stroke="#FAA88C" stroke-width="10" stroke-linecap="round"/>
+    <path d="M -30,4 Q 0,-16 30,4" fill="none" stroke="#8A9EB0" stroke-width="10" stroke-linecap="round"/>
+    <path d="M -20,-24 Q 0,-44 20,-24" fill="none" stroke="#8A9A7E" stroke-width="10" stroke-linecap="round"/>
+  </g>
+</svg>
