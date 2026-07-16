@@ -12,6 +12,39 @@ function useRoute() {
 }
 function go(page) { window.location.hash = '/' + page; window.scrollTo(0, 0); }
 
+/* ---------- SITE IMAGE ----------
+   Drop real photo files into an /img folder in the repo (same folder as
+   index.html) using the filenames below. Until a file exists at that
+   path, a soft placeholder shows instead — nothing breaks either way.
+
+   Photo brief (per the brand guidelines): real people in gentle,
+   everyday settings, calm nature, quiet conversation — NOT meditation
+   poses, lotus positions, or yoga imagery. Think: someone walking a
+   quiet path, two people talking warmly over a table, hands around a
+   mug, a countryside or park scene. Good stock sources: Unsplash or
+   Pexels, searching things like "quiet countryside walk", "two people
+   talking outdoors", "calm morning coffee" rather than "meditation" or
+   "mindfulness" (those searches return the exact clichés to avoid).
+*/
+function SiteImage({ src, alt, caption, className }) {
+  const [errored, setErrored] = useState(false);
+  if (errored || !src) {
+    return (
+      <div className={'img-placeholder ' + (className || '')}>
+        <span>{caption || 'Photo goes here'}</span>
+      </div>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={'site-image ' + (className || '')}
+      onError={() => setErrored(true)}
+    />
+  );
+}
+
 /* ---------- ZEFFY EMBED ----------
    Replace each zeffyUrl below with the real embed link from your Zeffy
    campaign (Zeffy dashboard > campaign > Share > Embed on my website).
@@ -69,25 +102,13 @@ const NAV_ITEMS = [
   ['contact', 'Contact'],
 ];
 
-function LogoMark() {
-  // Placeholder mark (soft leaf/wave) until the real SVG logo is dropped in.
-  return (
-    <svg className="logo-mark" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="17" cy="17" r="16" fill="var(--sage-tint)" />
-      <path d="M9 19c3-8 10-11 16-8-2 7-9 11-16 8Z" fill="var(--sage)" />
-      <circle cx="22" cy="12" r="2.4" fill="var(--gold)" />
-    </svg>
-  );
-}
-
 function Nav({ route }) {
   const isProgrammes = route.startsWith('programmes');
   return (
     <nav className="site-nav">
       <div className="nav-inner">
         <button className="logo" onClick={() => go('home')}>
-          <LogoMark />
-          WholeMind Resilience
+          <img className="woodmark" src="logos/logo-woodmark.svg" alt="WholeMind Resilience" />
         </button>
         <ul className="nav-links">
           {NAV_ITEMS.map(([key, label]) => (
@@ -166,22 +187,51 @@ function Home() {
       <div className="hero">
         <div className="blob b1"></div>
         <div className="blob b2"></div>
-        <div className="eyebrow">WholeMind Resilience</div>
-        <h1>Helping people, teams and communities reduce stress, prevent burnout and build lasting resilience.</h1>
-        <p className="sub">Evidence-based approaches that support mental wellbeing.</p>
+        <div className="hero-flex">
+          <div className="hero-text">
+            <div className="eyebrow">WholeMind Resilience</div>
+            <h1>Helping people, teams and communities reduce stress, prevent burnout and build lasting resilience.</h1>
+            <p className="sub">Evidence-based approaches that support mental wellbeing.</p>
+          </div>
+          <SiteImage
+            className="hero-image"
+            src="img/hero.jpg"
+            alt="A calm, everyday scene reflecting steadiness and wellbeing"
+            caption="Photo: a calm outdoor scene or quiet, everyday moment — e.g. someone walking a countryside path. Save as img/hero.jpg"
+          />
+        </div>
       </div>
+
       <div className="band band-sage">
         <div className="band-inner">
           <div className="audience-grid">
             <div className="audience-card" onClick={() => go('programmes-individuals')}>
+              <SiteImage
+                className="card-image"
+                src="img/individuals.jpg"
+                alt="A calm, everyday moment representing individual wellbeing"
+                caption="Photo: person on a quiet walk, or relaxed at home. Save as img/individuals.jpg"
+              />
               <h3>For Individuals &amp; Communities</h3>
               <p>Mindfulness courses, sessions, coaching and community workshops.</p>
             </div>
             <div className="audience-card" onClick={() => go('programmes-professionals')}>
+              <SiteImage
+                className="card-image"
+                src="img/professionals.jpg"
+                alt="Colleagues in a warm, calm conversation"
+                caption="Photo: two colleagues talking warmly, break-room or office setting. Save as img/professionals.jpg"
+              />
               <h3>For Professionals &amp; Teams</h3>
               <p>CMR for teams, reflective practice, and stress &amp; burnout workshops.</p>
             </div>
             <div className="audience-card" onClick={() => go('programmes-systems')}>
+              <SiteImage
+                className="card-image"
+                src="img/systems.jpg"
+                alt="A calm, focused leadership conversation"
+                caption="Photo: a calm 1:1 or small group conversation, leadership setting. Save as img/systems.jpg"
+              />
               <h3>For Systems &amp; Providers</h3>
               <p>Phased return, safe leader space, and scalable neighbourhood prevention.</p>
             </div>
@@ -251,6 +301,12 @@ function About() {
         <div className="eyebrow">About Us</div>
         <h1>A preventive wellbeing partner</h1>
       </div>
+      <SiteImage
+        className="about-image"
+        src="img/about.jpg"
+        alt="A calm, everyday scene representing the founder's approach"
+        caption="Photo: founder or team in a relaxed, real setting — not a posed studio shot. Save as img/about.jpg"
+      />
       <Accordion />
     </div>
   );
@@ -260,30 +316,33 @@ function About() {
 const PROGRAMMES = {
   individuals: {
     heading: 'For Individuals & Communities',
+    icon: 'logos/icon-public-mindful-sessions.svg',
     intro: `If you've reached a point where stress, overwhelm or burnout have felt harder to carry, you are not alone.`,
     items: [
-      { title: 'Mindfulness Tuition', text: 'The Compassionate Mindful Resilience (CMR) Programme is an 8-hour, trauma-informed mindfulness and compassion course developed by MindfulnessUK. Four 2-hour workshops, each practice 10 minutes or less.', cta: 'View Course Dates' },
-      { title: 'Mindfulness & Meditation Sessions', text: 'Join a gentle, purposeful mindfulness session designed to help you pause, regulate and reconnect. Available online and in Norfolk-based venues.', cta: 'Book Online Group' },
-      { title: 'Mindfulness Coaching', text: '1:1 mindfulness coaching offers a quiet, personal space to explore how mindfulness can support you in the context of your own life.', cta: 'Book a Chat' },
-      { title: 'Community Wellbeing Workshops', text: 'A gentle, trauma-informed, accessible space to learn, explore and practise tools that support mental wellbeing — no experience needed.', cta: 'Book a Workshop' },
+      { title: 'Mindfulness Tuition', icon: null, text: 'The Compassionate Mindful Resilience (CMR) Programme is an 8-hour, trauma-informed mindfulness and compassion course developed by MindfulnessUK. Four 2-hour workshops, each practice 10 minutes or less.', cta: 'View Course Dates' },
+      { title: 'Mindfulness & Meditation Sessions', icon: 'logos/icon-public-mindful-sessions.svg', text: 'Join a gentle, purposeful mindfulness session designed to help you pause, regulate and reconnect. Available online and in Norfolk-based venues.', cta: 'Book Online Group' },
+      { title: 'Mindfulness Coaching', icon: 'logos/icon-coaching-dialogue.svg', text: '1:1 mindfulness coaching offers a quiet, personal space to explore how mindfulness can support you in the context of your own life.', cta: 'Book a Chat' },
+      { title: 'Community Wellbeing Workshops', icon: 'logos/icon-public-workshops.svg', text: 'A gentle, trauma-informed, accessible space to learn, explore and practise tools that support mental wellbeing — no experience needed.', cta: 'Book a Workshop' },
     ]
   },
   professionals: {
     heading: 'For Professionals & Teams',
+    icon: 'logos/icon-teams-reflective-practice.svg',
     intro: `Designed to meet the needs of people in high-demand roles across health, social care, council, blue light, education and the VCSE sector.`,
     items: [
-      { title: 'CMR for Teams', text: 'An 8-hour, trauma-informed mindfulness and compassion training for staff experiencing pressure, emotional load and compassion fatigue.', cta: 'Get in Touch' },
-      { title: 'Compassion Based Reflective Practice', text: 'A facilitated, trauma-informed space for teams to pause, reflect and explore the human impact of their work.', cta: 'Get in Touch' },
-      { title: 'Workshops: Stress, Burnout & Vicarious Trauma', text: 'A gentle, practical space for staff to learn about stress, burnout and vicarious trauma in a way that feels human and relatable.', cta: 'Get in Touch' },
+      { title: 'CMR for Teams', icon: null, text: 'An 8-hour, trauma-informed mindfulness and compassion training for staff experiencing pressure, emotional load and compassion fatigue.', cta: 'Get in Touch' },
+      { title: 'Compassion Based Reflective Practice', icon: 'logos/icon-teams-reflective-practice.svg', text: 'A facilitated, trauma-informed space for teams to pause, reflect and explore the human impact of their work.', cta: 'Get in Touch' },
+      { title: 'Workshops: Stress, Burnout & Vicarious Trauma', icon: 'logos/icon-workshops-windingpath.svg', text: 'A gentle, practical space for staff to learn about stress, burnout and vicarious trauma in a way that feels human and relatable.', cta: 'Get in Touch' },
     ]
   },
   systems: {
     heading: 'For Systems & Providers',
+    icon: 'logos/icon-system-scalable-prevention.svg',
     intro: `Providers and larger systems can offer prevention at scale — within workforce and communities.`,
     items: [
-      { title: 'CMR for Phased Return', text: 'Supports staff returning to work after stress-related absence, burnout risk or vicarious trauma exposure. Cohorts of up to 15 participants.', cta: 'Get in Touch' },
-      { title: 'Safe Leader Space', text: 'A protected, trauma-informed environment for senior leaders to pause, reflect and explore the human impact of leadership.', cta: 'Get in Touch' },
-      { title: 'Scalable Neighbourhood Prevention', text: 'An 8-hour trauma-informed group course for communities needing early, preventative wellbeing support — designed to scale across GP practices and Neighbourhood Health Teams.', cta: 'Get in Touch' },
+      { title: 'CMR for Phased Return', icon: null, text: 'Supports staff returning to work after stress-related absence, burnout risk or vicarious trauma exposure. Cohorts of up to 15 participants.', cta: 'Get in Touch' },
+      { title: 'Safe Leader Space', icon: 'logos/icon-safe-leader-space.svg', text: 'A protected, trauma-informed environment for senior leaders to pause, reflect and explore the human impact of leadership.', cta: 'Get in Touch' },
+      { title: 'Scalable Neighbourhood Prevention', icon: 'logos/icon-system-scalable-prevention.svg', text: 'An 8-hour trauma-informed group course for communities needing early, preventative wellbeing support — designed to scale across GP practices and Neighbourhood Health Teams.', cta: 'Get in Touch' },
     ]
   }
 };
@@ -298,6 +357,7 @@ function ProgrammePage({ audience }) {
   return (
     <div className="page">
       <div className="page-header">
+        {data.icon && <img className="hub-icon" src={data.icon} alt="" />}
         <div className="eyebrow">Programmes</div>
         <h1>{data.heading}</h1>
         <p>{data.intro}</p>
@@ -313,6 +373,7 @@ function ProgrammePage({ audience }) {
       </div>
       {data.items.map(item => (
         <div className="prog-block" key={item.title}>
+          {item.icon && <img className="item-icon" src={item.icon} alt="" />}
           <h2>{item.title}</h2>
           <p>{item.text}</p>
           <button className="cta-btn" onClick={() => go('events')}>{item.cta}</button>
