@@ -119,38 +119,26 @@ function Nav({ route }) {
 }
 
 /* ---------- SUBSCRIBE BANNER ----------
-   "Mindfulness. Straight to your inbox." heading removed per the July
-   content map. Now shown ONLY on Home and the Individuals & Communities
-   programme page (thin variant), not site-wide.
+   Now uses Zeffy's real newsletter signup embed rather than a custom
+   form. Won't actually submit until Zeffy's bank account is linked —
+   same as the booking/donation embeds — but it's wired up and ready.
+
+   Button/background colours come from Zeffy's own campaign settings
+   (Zeffy dashboard > this campaign > Design/Customize), not from this
+   code — edit them there once you're ready to match the brand palette.
 */
 function SubscribeBanner() {
-  const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    // TODO: replace with a real call to your mailing list provider
-    setSent(true);
-  }
-
   return (
     <div className="subscribe-band thin">
       <p>Get updates on courses, events and wellbeing resources for the public.</p>
-      {sent ? (
-        <p style={{ color: '#fff', fontWeight: 600 }}>Thanks — you're subscribed.</p>
-      ) : (
-        <form className="subscribe-form" onSubmit={handleSubmit}>
-          <input
-            type="email"
-            required
-            placeholder="Your email address"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-          />
-          <button type="submit">Subscribe</button>
-        </form>
-      )}
-      <p className="subscribe-note">No spam — unsubscribe anytime.</p>
+      <div className="zeffy-subscribe-frame">
+        <iframe
+          title="Signup form powered by Zeffy"
+          style={{ position: 'absolute', border: 0, top: 0, left: 0, bottom: 0, right: 0, width: '100%', height: '100%' }}
+          src="https://www.zeffy.com/en-GB/embed/newsletter-form/subscribe-for-updates-2"
+          allowTransparency="true"
+        />
+      </div>
     </div>
   );
 }
