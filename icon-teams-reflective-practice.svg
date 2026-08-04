@@ -1,0 +1,7 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(100,100)">
+    <path d="M -15,-45 C -45,-45 -45,45 -15,45" fill="none" stroke="#FAA88C" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 15,-45 C 45,-45 45,45 15,45" fill="none" stroke="#8A9EB0" stroke-width="12" stroke-linecap="round"/>
+    <path d="M -11,-7 C -4,-7 4,7 11,7" fill="none" stroke="#8A9A7E" stroke-width="9" stroke-linecap="round"/>
+  </g>
+</svg>
