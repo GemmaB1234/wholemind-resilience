@@ -94,10 +94,36 @@ const NAV_ITEMS = [
   ['contact', 'Contact'],
 ];
 
+function NavItem({ item, route, activeKey }) {
+  const [key, label, sub] = item;
+  const [open, setOpen] = useState(false);
+  useEffect(() => { setOpen(false); }, [route]);
+  const choose = (k) => { setOpen(false); if (document.activeElement) document.activeElement.blur(); go(k); };
+  return (
+    <li
+      className={sub ? 'has-sub' : ''}
+      onMouseEnter={() => sub && setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <button className={activeKey === key ? 'active' : ''} onClick={() => choose(key)}>
+        {label}{sub ? <span className="caret"> &#9662;</span> : null}
+      </button>
+      {sub && (
+        <ul className={'sub-menu' + (open ? ' open' : '')}>
+          {sub.map(([k, l]) => (
+            <li key={k}><button className={route === k ? 'active' : ''} onClick={() => choose(k)}>{l}</button></li>
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+
 function Nav({ route }) {
-  const isProgrammes = route.startsWith('programmes');
-  const isAbout = route === 'about' || route === 'projects';
-  const isCourse = route.startsWith('participants');
+  let activeKey = route;
+  if (route.startsWith('programmes')) activeKey = 'programmes-individuals';
+  else if (route === 'projects') activeKey = 'about';
+  else if (route.startsWith('participants')) activeKey = 'participants';
   return (
     <nav className="site-nav">
       <div className="nav-inner">
@@ -105,21 +131,7 @@ function Nav({ route }) {
           <img className="woodmark" src="logo-woodmark.svg" alt="WholeMind Resilience" />
         </button>
         <ul className="nav-links">
-          {NAV_ITEMS.map(([key, label, sub]) => (
-            <li key={key} className={sub ? 'has-sub' : ''}>
-              <button
-                className={(route === key || (key === 'programmes-individuals' && isProgrammes) || (key === 'about' && isAbout) || (key === 'participants' && isCourse)) ? 'active' : ''}
-                onClick={() => go(key)}
-              >{label}{sub ? <span className="caret"> &#9662;</span> : null}</button>
-              {sub && (
-                <ul className="sub-menu">
-                  {sub.map(([k, l]) => (
-                    <li key={k}><button className={route === k ? 'active' : ''} onClick={() => go(k)}>{l}</button></li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
+          {NAV_ITEMS.map(item => <NavItem key={item[0]} item={item} route={route} activeKey={activeKey} />)}
         </ul>
       </div>
     </nav>
