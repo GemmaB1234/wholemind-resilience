@@ -93,6 +93,49 @@ const NAV_ITEMS = [
   ['contact', 'Contact'],
 ];
 
+/* ---------- SOCIAL LINKS (small icons) ---------- */
+const SOCIALS = [
+  { name: 'Facebook', url: 'https://www.facebook.com/wholemindresilience/', path: 'M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z' },
+  { name: 'Instagram', url: 'https://www.instagram.com/wholemindresilience', stroke: true },
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/company/wholemindresilience', path: 'M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z' },
+];
+
+function SocialLinks({ size = 18, labels = false }) {
+  return (
+    <span className="social-links">
+      {SOCIALS.map(sc => (
+        <a key={sc.name} href={sc.url} target="_blank" rel="noopener noreferrer" aria-label={sc.name + ' (opens in a new tab)'} title={sc.name}>
+          <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true"
+            fill={sc.stroke ? 'none' : 'currentColor'} stroke={sc.stroke ? 'currentColor' : 'none'} strokeWidth="1.8">
+            {sc.stroke
+              ? <React.Fragment><rect x="3.5" y="3.5" width="17" height="17" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none" /></React.Fragment>
+              : <path d={sc.path} />}
+          </svg>
+          {labels && <span>{sc.name}</span>}
+        </a>
+      ))}
+    </span>
+  );
+}
+
+/* Navigation styles live here (not only in index.html) so the top bar
+   always lays out correctly, even if index.html is an older copy. */
+const NAV_CSS = `
+.nav-inner{ display:flex; align-items:center; justify-content:space-between; max-width:1180px; margin:0 auto; padding:6px 24px; gap:12px; }
+.nav-links{ display:flex; align-items:center; gap:clamp(12px,1.7vw,24px); list-style:none; margin:0; padding:0; flex-wrap:nowrap; }
+.nav-links > li{ position:relative; display:flex; align-items:center; }
+.nav-links > li > button{ white-space:nowrap; line-height:1.2; padding:6px 0; }
+.nav-links .nav-social{ margin-left:4px; padding-left:clamp(10px,1.4vw,18px); border-left:1px solid var(--line); }
+.social-links{ display:inline-flex; align-items:center; gap:12px; }
+.social-links a{ display:inline-flex; align-items:center; gap:6px; color:var(--sage-deep); opacity:.8; transition:opacity .15s, transform .15s; text-decoration:none; font-size:14px; font-weight:600; }
+.social-links a:hover{ opacity:1; transform:translateY(-1px); }
+@media (max-width:1060px){
+  .nav-inner{ flex-direction:column; padding:6px 16px 10px; }
+  .nav-links{ flex-wrap:wrap; justify-content:center; row-gap:4px; }
+  .nav-links .nav-social{ border-left:none; padding-left:0; margin-left:0; }
+}
+`;
+
 function NavItem({ item, route, activeKey }) {
   const [key, label, sub] = item;
   const [open, setOpen] = useState(false);
@@ -111,15 +154,18 @@ function NavItem({ item, route, activeKey }) {
         <ul
           className="sub-menu"
           style={{
-            display: 'block',
+            position: 'absolute', top: 'calc(100% + 2px)', left: -12, minWidth: 200, margin: 0, padding: 6,
+            listStyle: 'none', background: '#fff', border: '1px solid var(--line)', borderRadius: 14,
+            boxShadow: '0 8px 22px rgba(43,42,36,.09)', zIndex: 60, display: 'block',
             opacity: open ? 1 : 0,
             visibility: open ? 'visible' : 'hidden',
+            pointerEvents: open ? 'auto' : 'none',
             transform: open ? 'translateY(0)' : 'translateY(-6px)',
             transition: 'opacity .2s ease, transform .2s ease, visibility .2s',
           }}
         >
           {sub.map(([k, l]) => (
-            <li key={k}><button className={route === k ? 'active' : ''} onClick={() => choose(k)}>{l}</button></li>
+            <li key={k} style={{ display: 'block' }}><button className={route === k ? 'active' : ''} onClick={() => choose(k)} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '9px 14px', border: 'none', borderRadius: 9, fontSize: 14, fontWeight: route === k ? 700 : 500, whiteSpace: 'nowrap' }}>{l}</button></li>
           ))}
         </ul>
       )}
@@ -134,12 +180,14 @@ function Nav({ route }) {
   else if (route.startsWith('participants')) activeKey = 'participants';
   return (
     <nav className="site-nav">
+      <style>{NAV_CSS}</style>
       <div className="nav-inner">
         <button className="logo" onClick={() => go('home')}>
           <img className="woodmark" src="logo-woodmark.svg" alt="WholeMind Resilience" />
         </button>
         <ul className="nav-links">
           {NAV_ITEMS.map(item => <NavItem key={item[0]} item={item} route={route} activeKey={activeKey} />)}
+          <li className="nav-social"><SocialLinks size={17} /></li>
         </ul>
       </div>
     </nav>
@@ -239,10 +287,9 @@ function Footer() {
         <SiteImage className="wide" src="badge-mindfulnessuk-cmr.png" alt="MindfulnessUK CMR Teacher, accredited for teaching" caption="MindfulnessUK CMR Teacher badge" />
         {/* BAMBA badge to be added once available */}
       </div>
+      <div style={{ marginBottom: 16 }}><SocialLinks size={20} /></div>
       <div className="foot-links">
-        <a href="https://www.facebook.com/wholemindresilience/" target="_blank" rel="noopener noreferrer">Facebook</a>
-        <a href="https://www.instagram.com/wholemindresilience" target="_blank" rel="noopener noreferrer">Instagram</a>
-        <a href="https://www.linkedin.com/company/wholemindresilience" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+
         <a href="#/policy-privacy">Privacy</a>
         <a href="#/policy-safeguarding">Safeguarding</a>
         <a href="#/policy-terms">Terms &amp; Conditions</a>
@@ -748,6 +795,10 @@ function Contact() {
           <button className="cta-btn" type="submit">Send Message</button>
         </form>
       )}
+      <div style={{ textAlign: 'center', marginTop: 40 }}>
+        <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 10 }}>Or find us on social media</p>
+        <SocialLinks size={22} labels />
+      </div>
     </SimplePage>
   );
 }
