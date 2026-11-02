@@ -97,19 +97,28 @@ const NAV_ITEMS = [
 function NavItem({ item, route, activeKey }) {
   const [key, label, sub] = item;
   const [open, setOpen] = useState(false);
+  const timer = React.useRef(null);
   useEffect(() => { setOpen(false); }, [route]);
-  const choose = (k) => { setOpen(false); if (document.activeElement) document.activeElement.blur(); go(k); };
+  useEffect(() => () => clearTimeout(timer.current), []);
+  const show = () => { clearTimeout(timer.current); if (sub) setOpen(true); };
+  const hide = () => { clearTimeout(timer.current); timer.current = setTimeout(() => setOpen(false), 180); };
+  const choose = (k) => { clearTimeout(timer.current); setOpen(false); if (document.activeElement) document.activeElement.blur(); go(k); };
   return (
-    <li
-      className={sub ? 'has-sub' : ''}
-      onMouseEnter={() => sub && setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-    >
+    <li className={sub ? 'has-sub' : ''} onMouseEnter={show} onMouseLeave={hide}>
       <button className={activeKey === key ? 'active' : ''} onClick={() => choose(key)}>
         {label}{sub ? <span className="caret"> &#9662;</span> : null}
       </button>
       {sub && (
-        <ul className={'sub-menu' + (open ? ' open' : '')} style={{ display: open ? 'block' : 'none' }}>
+        <ul
+          className="sub-menu"
+          style={{
+            display: 'block',
+            opacity: open ? 1 : 0,
+            visibility: open ? 'visible' : 'hidden',
+            transform: open ? 'translateY(0)' : 'translateY(-6px)',
+            transition: 'opacity .2s ease, transform .2s ease, visibility .2s',
+          }}
+        >
           {sub.map(([k, l]) => (
             <li key={k}><button className={route === k ? 'active' : ''} onClick={() => choose(k)}>{l}</button></li>
           ))}
@@ -423,7 +432,7 @@ const PROGRAMMES = {
     bullets: ['Health', 'Social care', 'Care homes and community care', 'Councils', 'Blue light services', 'Education', 'VCSE sector'],
     alignNote: 'Aligns with NICE guidance NG212, NG13 & QS147 & the 2026 NHS Staff Standards Framework',
     items: [
-      { title: 'CMR for Teams', icon: 'icon-cmr.svg', text: 'An 8-hour, research-backed, trauma-informed mindfulness and compassion training for staff experiencing pressure, emotional load and compassion fatigue. Developed by MindfulnessUK, the Compassionate and Mindful Resilience (CMR) programme teaches accessible, short, realistic practices which can be used in high-demand roles to reduce stress, vicarious trauma and burnout.\n\nDelivered to teams of up to 15: online or in person as 4 × 2-hour or 2 × 4-hour workshops, over 4–6 weeks.', stat: 'stat-95-professionals.png', statAlt: '95% of public service professionals surveyed said they or their team had shown signs of prolonged stress, exhaustion, vicarious trauma or burnout in the past year (professional survey, 122 respondents)' },
+      { title: 'CMR for Teams', icon: 'icon-cmr.svg', text: 'An 8-hour, research-backed, trauma-informed mindfulness and compassion training for staff experiencing pressure, emotional load and compassion fatigue. Developed by MindfulnessUK, the Compassionate and Mindful Resilience (CMR) programme teaches accessible, short, realistic practices which can be used in high-demand roles to reduce stress, vicarious trauma and burnout.\n\nDelivered to teams of up to 15: online or in person as 4 × 2-hour or 2 × 4-hour workshops, over 4–6 weeks.' },
       { title: 'Compassion Based Reflective Practice', icon: 'icon-teams-reflective-practice.svg', text: `A trauma-informed, facilitated space for teams to prioritise wellbeing — pausing to reflect, with compassion for themselves and others, on the human impact of their work. Designed to work with small or large groups as a single CPD session or an ongoing space to build resilience and strengthen wellbeing over time.\n\nAvailable for groups:\n• Online — nationally\n• In person — Norfolk only` },
       { title: 'Workshops: Stress, Burnout & Vicarious Trauma', icon: 'icon-workshops-windingpath.svg', text: `A gentle, practical space for staff to learn about stress, burnout and vicarious trauma in a way that feels human and relatable. Engaging workshops shaped around your team's specific needs, built to fit naturally into CPD days, and grounded in real lived experience.\n\nAvailable for small or large groups.` },
     ],
@@ -438,7 +447,7 @@ const PROGRAMMES = {
     alignNote: 'Mapped to NICE guidance NG212, NG13 and QS147, the NHS Staff Standards (2026) and the HSE Management Standards.',
     items: [
       { title: 'CMR for Phased Return', icon: 'icon-cmr.svg', text: 'An 8-hour, research-backed, trauma-informed mindfulness and compassion programme for staff on, or recently returned from, a phased return — designed to reduce the risk of burnout during one of the highest-risk periods for staff wellbeing. Developed by MindfulnessUK, the Compassionate & Mindful Resilience (CMR) programme teaches accessible, short, realistic practices that help staff rebuild confidence and regulate pressure as they re-enter demanding roles.\n\nAligned with NICE guidance for staff wellbeing and the new NHS staff standards, which require organisations to take a preventative, evidence-based approach to staff health and wellbeing.\n\nDelivered online as 4 × 2-hour workshops, over 4–6 weeks. Each cohort can accommodate up to 15 participants — a scalable way for large organisations to support staff consistently across teams, departments or sites.' },
-      { title: 'Safe Leader Space', icon: 'icon-safe-leader-space.svg', text: `Leaders often carry as much strain as the teams they support, with far less room to show it. When people look to you for confidence and direction, being open about the pressure can feel impossible.\n\nSafe Leader Space is a protected, trauma-informed space for leaders to put their own wellbeing first. Facilitated, themed sessions give you time to pause, reflect and be honest about the weight you carry, away from your own team. Along the way, you'll build compassion for yourself and learn to hold compassionate spaces for others.\n\nOnline, in blocks of at least five sessions.`, stat: 'stat-96-long-term-conditions.png', statAlt: '96% of people living with a long-term condition said they would use courses designed around their condition (public survey, 88 respondents)' },
+      { title: 'Safe Leader Space', icon: 'icon-safe-leader-space.svg', text: `Leaders often carry as much strain as the teams they support, with far less room to show it. When people look to you for confidence and direction, being open about the pressure can feel impossible.\n\nSafe Leader Space is a protected, trauma-informed space for leaders to put their own wellbeing first. Facilitated, themed sessions give you time to pause, reflect and be honest about the weight you carry, away from your own team. Along the way, you'll build compassion for yourself and learn to hold compassionate spaces for others.\n\nOnline, in blocks of at least five sessions.` },
       { title: 'Scalable Neighbourhood Prevention', icon: 'icon-system-scalable-prevention.svg', text: `A flexible, non-clinical prevention offer, shaped around what your organisation and the people you serve need. This isn't a fixed package.\n\nIt can sit wherever prevention is needed: group courses for people on waiting lists, courses for specific long-term conditions, ongoing support in Neighbourhood Health Centres, or programmes commissioned by GP practices or social care for their patients and clients.\n\nWholeMind Resilience coordinates a network of accredited practitioners, so delivery can grow with your community's capacity, from a single course to an ongoing programme of practice groups.\n\nEvery version stays practical, trauma-informed and grounded in real life. It isn't therapy or a mental health service. It's preventative support for people who don't yet need specialist care.\n\nLet's talk through what this could look like for you.` },
     ],
     outroHeading: 'Ready to talk about prevention for your organisation or population?',
@@ -683,6 +692,8 @@ function Projects() {
       <div className="impact-stats">
         <img className="stat-graphic" src="stat-99-public.png" alt="99% of people surveyed said they, or someone close to them, had experienced high stress, burnout or mental difficulty in the past year (public survey, 88 respondents)" />
         <img className="stat-graphic" src="stat-88-would-use.png" alt="88% of people surveyed said they would use one or more of the services we proposed (public survey, 88 respondents)" />
+        <img className="stat-graphic" src="stat-95-professionals.png" alt="95% of public service professionals surveyed said they or their team had shown signs of prolonged stress, exhaustion, vicarious trauma or burnout in the past year (professional survey, 122 respondents)" />
+        <img className="stat-graphic" src="stat-96-long-term-conditions.png" alt="96% of people living with a long-term condition said they would use courses designed around their condition (public survey, 88 respondents)" />
       </div>
 
       <div className="project-card" style={{ marginTop: 40 }}>
