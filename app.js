@@ -361,7 +361,7 @@ function Home() {
               <p>Evidence-based prevention for the wider health and care system: support for phased return to work, space for leaders' wellbeing, and prevention that can grow across neighbourhoods.</p>
             </div>
           </div>
-          <p className="safety-note">We're a non-clinical, preventative service and do not offer crisis support. For urgent help, contact your GP or call NHS 111 (option 2). In an emergency, please call 999.</p>
+          <p className="safety-note" style={{ maxWidth: 700, margin: '34px auto 0', whiteSpace: 'normal', textAlign: 'center', lineHeight: 1.55, fontSize: 13.5, textWrap: 'balance' }}>We're a non-clinical, preventative service and do not offer crisis support. For urgent help, contact your GP or call NHS 111 (option 2). In an emergency, please call 999.</p>
         </div>
       </div>
 
@@ -688,7 +688,7 @@ const NEWS_POSTS = [
         <p>We&rsquo;re launching at the Social Enterprise Showcase Day at Carrow House, Norwich, on 19 November. The event is run by FUSE Network, a Community Interest Company that supports the not-for-profit sector in our area. As members, we&rsquo;ve had their support to set up and run well from the very start.</p>
         <p>Come and find our stand, say hello, and pick up a welcome card with 25% off any of our services, right through to June 2027!</p>
         <p><a className="cta-btn" href="https://www.eventbrite.co.uk/e/social-enterprise-day-showcase-2026-public-event-tickets-1985935085300" target="_blank" rel="noopener noreferrer">Get your tickets</a></p>
-        <SiteImage className="news-logo" src="fuse-network-logo.png" alt="FUSE Network" caption="FUSE Network logo" />
+        <img src="fuse-network-logo.png" alt="FUSE Network" style={{ display: 'block', width: 120, height: 'auto', maxWidth: '100%', objectFit: 'contain', borderRadius: 0, margin: '6px 0 10px', mixBlendMode: 'multiply' }} />
 
         <h4>Our big launch offer</h4>
         <p>Our first two online mindfulness courses being delivered in Winter &amp; Spring are 60% off, limited to 24 places in total. Use code <b>BAMBA</b> at checkout to take advantage of our offer.</p>
