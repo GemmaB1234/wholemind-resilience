@@ -743,13 +743,13 @@ const PROJECTS = [
   // Extra projects later: { title: 'Project name', summary: '...', links: [{label:'Read the report', url:'...'}] }
 ];
 
-/* The three research reports. Put the web address of each PDF in `url`
-   (for example a Supabase Storage link). Until a url is added, the report
-   shows as "link coming soon" rather than a broken link. */
+/* The three research reports. The PDFs sit in the repo next to app.js,
+   so `url` is just the file name. Swap in a full web address if they
+   are ever moved elsewhere. A blank url shows "link coming soon". */
 const REPORTS = [
-  { title: 'Evidence of Community Need', url: '' },
-  { title: 'Evidence of Professional Need', url: '' },
-  { title: 'Standards & Regulatory Alignment Report', url: '', note: 'how we checked that our services meet the standards health and public sector organisations work to.' },
+  { title: 'Evidence of Community Need', url: 'evidence-of-community-need.pdf' },
+  { title: 'Evidence of Professional Need', url: 'evidence-of-professional-need.pdf' },
+  { title: 'Standards & Regulatory Alignment Report', url: 'standards-regulatory-alignment-report.pdf', note: 'how we checked that our services meet the standards health and public sector organisations work to.' },
 ];
 
 const FINDINGS = [
