@@ -884,18 +884,58 @@ function GetInvolved() {
   );
 }
 
+/* Contact form: sends through Web3Forms to the info@ inbox.
+   The access key below is public by design (it only says where to deliver). */
+const WEB3FORMS_KEY = 'e5b3f2e2-d624-4f49-910b-ad2dcb4065fc';
+
 function Contact() {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+  const fieldStyle = { padding: 12, borderRadius: 8, border: '1px solid var(--line)', fontFamily: 'inherit', fontSize: 15 };
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    setStatus('sending');
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: 'New message from the WholeMind Resilience website',
+          from_name: 'WholeMind Resilience website',
+          name: f.get('name'),
+          email: f.get('email'),
+          message: f.get('message'),
+          botcheck: f.get('botcheck') ? true : false,
+        }),
+      });
+      const data = await res.json();
+      setStatus(data.success ? 'sent' : 'error');
+    } catch (err) {
+      setStatus('error');
+    }
+  }
+
   return (
     <SimplePage eyebrow="Contact" title="Get in touch">
-      {sent ? (
-        <p>Thanks — your message has been sent. We'll be in touch soon.</p>
+      {status === 'sent' ? (
+        <div style={{ textAlign: 'center', padding: '20px 0' }}>
+          <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: 'var(--sage-deep)' }}>Thank you, we&rsquo;ve got your message.</p>
+          <p>We&rsquo;ll be in touch soon.</p>
+        </div>
       ) : (
-        <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <input placeholder="Name" required style={{ padding: 12, borderRadius: 8, border: '1px solid var(--line)' }} />
-          <input placeholder="Email" type="email" required style={{ padding: 12, borderRadius: 8, border: '1px solid var(--line)' }} />
-          <textarea placeholder="Message" required rows={5} style={{ padding: 12, borderRadius: 8, border: '1px solid var(--line)', fontFamily: 'inherit' }} />
-          <button className="cta-btn" type="submit">Send Message</button>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <input name="name" placeholder="Name" required style={fieldStyle} />
+          <input name="email" placeholder="Email" type="email" required style={fieldStyle} />
+          <textarea name="message" placeholder="Message" required rows={5} style={fieldStyle} />
+          {/* spam trap: hidden from people, bots tend to tick it */}
+          <input type="checkbox" name="botcheck" tabIndex="-1" autoComplete="off" style={{ display: 'none' }} />
+          <p style={{ fontSize: 13, color: 'var(--muted)', margin: 0 }}>Please don&rsquo;t include health or personal details in this form. We&rsquo;ll talk about anything sensitive when we reply.</p>
+          {status === 'error' && (
+            <p style={{ color: '#B14A3B', fontSize: 14, margin: 0 }}>Sorry, that didn&rsquo;t send. Please try again, or email <a href="mailto:info@wholemindresilience.co.uk" className="text-plum">info@wholemindresilience.co.uk</a>.</p>
+          )}
+          <button className="cta-btn" type="submit" disabled={status === 'sending'}>{status === 'sending' ? 'Sending…' : 'Send Message'}</button>
         </form>
       )}
       <div style={{ textAlign: 'center', marginTop: 40 }}>
