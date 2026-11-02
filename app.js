@@ -109,7 +109,7 @@ function NavItem({ item, route, activeKey }) {
         {label}{sub ? <span className="caret"> &#9662;</span> : null}
       </button>
       {sub && (
-        <ul className={'sub-menu' + (open ? ' open' : '')}>
+        <ul className={'sub-menu' + (open ? ' open' : '')} style={{ display: open ? 'block' : 'none' }}>
           {sub.map(([k, l]) => (
             <li key={k}><button className={route === k ? 'active' : ''} onClick={() => choose(k)}>{l}</button></li>
           ))}
