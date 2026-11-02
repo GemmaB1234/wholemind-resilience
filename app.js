@@ -86,7 +86,7 @@ const ZEFFY_CAMPAIGNS = {
 const NAV_ITEMS = [
   ['home', 'Home'],
   ['about', 'About Us', [['about', 'About Us'], ['projects', 'Our Impact']]],
-  ['programmes-individuals', 'Programmes'],
+  ['programmes-individuals', 'Programmes', [['programmes-individuals', 'Individuals & Communities'], ['programmes-professionals', 'Professionals & Teams'], ['programmes-systems', 'Systems & Providers'], ['events', 'See dates and book']]],
   ['events', 'Events'],
   ['news', 'News'],
   ['involved', 'Get Involved'],
@@ -396,7 +396,7 @@ const PROGRAMMES = {
     items: [
       { title: 'Mindfulness Tuition', icon: 'icon-cmr.svg', text: 'The Compassionate Mindful Resilience (CMR) Programme is an 8-hour, trauma-informed mindfulness and compassion course developed by MindfulnessUK. Four 2-hour workshops over 4 weeks, teaching you how to use accessible mindfulness in everyday life.\n\nAvailable online & in Norfolk venues.' },
       { title: 'Mindfulness & Meditation Sessions', icon: 'icon-public-mindful-sessions.svg', text: 'Join gentle, purposeful mindfulness sessions designed to help you pause, regulate and reconnect. Regular opportunities to practice, and take time for your wellbeing. No experience necessary. Available online and in Norfolk-based venues.' },
-      { title: 'Mindfulness Coaching', icon: 'icon-coaching-dialogue.svg', text: '1:1 mindfulness coaching offers a quiet, personal space to explore how mindfulness can support you in the context of your own life.', cta: 'Get in touch', ctaTo: 'contact' },
+      { title: 'Mindfulness Coaching', icon: 'icon-coaching-dialogue.svg', text: '1:1 mindfulness coaching offers a quiet, personal space to explore how mindfulness can support you in the context of your own life.' },
       { title: 'Community Wellbeing Workshops', icon: 'icon-public-workshops.svg', text: 'A gentle, accessible, trauma-informed space to learn, explore and practise tools and activities that support positive mental wellbeing, and community connection.' },
     ],
     bottomButton: { label: 'See dates and book', to: 'events' },
