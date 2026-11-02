@@ -129,6 +129,24 @@ const NAV_CSS = `
 .social-links{ display:inline-flex; align-items:center; gap:12px; }
 .social-links a{ display:inline-flex; align-items:center; gap:6px; color:var(--sage-deep); opacity:.8; transition:opacity .15s, transform .15s; text-decoration:none; font-size:14px; font-weight:600; }
 .social-links a:hover{ opacity:1; transform:translateY(-1px); }
+.impact-article{ max-width:760px; margin:0 auto; background:var(--card,#fff); border:1px solid var(--line); border-radius:22px; padding:34px clamp(20px,4vw,44px); }
+.impact-article h2{ font-size:clamp(22px,3vw,28px); color:var(--sage-deep); margin:10px 0 12px; }
+.impact-article h3{ font-size:19px; color:var(--sage-deep); margin:30px 0 8px; }
+.impact-article p.lead{ font-family:'Playfair Display',serif; font-size:18px; color:var(--plum); margin:0 0 6px; }
+.impact-article p{ margin:0 0 12px; font-size:15px; }
+.impact-article ul{ padding-left:22px; margin:0 0 12px; font-size:15px; }
+.impact-article li{ margin:0 0 7px; }
+.status-pill{ display:inline-block; background:var(--sage-tint); color:var(--sage-deep); font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:5px 12px; border-radius:999px; }
+.findings{ display:flex; flex-direction:column; gap:18px; margin:14px 0 6px; }
+.finding{ display:flex; align-items:center; gap:22px; }
+.finding.flip{ flex-direction:row-reverse; }
+.finding img{ width:300px; max-width:46%; height:auto; border-radius:8px; box-shadow:0 5px 16px rgba(43,42,36,.08); flex:0 0 auto; }
+.finding p{ margin:0; font-size:14.5px; color:var(--ink); }
+@media (max-width:640px){ .finding, .finding.flip{ flex-direction:column; align-items:flex-start; } .finding img{ max-width:100%; width:320px; } }
+.report-list{ list-style:none; padding-left:0 !important; }
+.report-list li{ padding:10px 14px; background:var(--sage-tint); border-radius:12px; }
+.soon{ color:var(--muted); font-size:13px; }
+.thanks{ margin-top:22px !important; font-family:'Playfair Display',serif; font-size:17px !important; color:var(--sage-deep); text-align:center; }
 .gi-section{ margin:0 0 30px; padding:0 0 26px; border-bottom:1px solid var(--line); }
 .gi-section:last-of-type{ border-bottom:none; }
 .gi-section h2{ font-size:22px; color:var(--sage-deep); margin:0 0 10px; }
@@ -236,6 +254,7 @@ const NCSUN_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQQAAADYCAYAAA
    { quote: 'This course changed how I handle a hard day.', name: 'Course participant', role: 'Norwich, 2026' },
 */
 const TESTIMONIALS = [
+  { quote: 'I would use the service again, for myself or my team, because it enabled me to take a step back from the emotions of the situation and change what we would do in the future', name: 'Charli', role: 'NCSUN' },
 ];
 
 function TestimonialCarousel() {
@@ -720,11 +739,77 @@ function News() {
    text — keeps the site fast and the repo small.
 */
 const PROJECTS = [
-  // { title: 'Project name', summary: '...', links: [{label:'Read the report', url:'...'}] }
+  // Extra projects later: { title: 'Project name', summary: '...', links: [{label:'Read the report', url:'...'}] }
 ];
 
+/* The three research reports. Put the web address of each PDF in `url`
+   (for example a Supabase Storage link). Until a url is added, the report
+   shows as "link coming soon" rather than a broken link. */
+const REPORTS = [
+  { title: 'Evidence of Community Need', url: '' },
+  { title: 'Evidence of Professional Need', url: '' },
+  { title: 'Standards & Regulatory Alignment Report', url: '', note: 'how we checked that our services meet the standards health and public sector organisations work to.' },
+];
+
+const FINDINGS = [
+  { img: 'stat-99-public.png', alt: '99% said they, or someone close to them, had experienced high stress, burnout or mental difficulty in the past year (public survey, 88 respondents)', text: '99% of people we asked said they, or someone close to them, had experienced high stress, burnout or mental difficulty in the past year.' },
+  { img: 'stat-95-professionals.png', alt: '95% of public service professionals said they or their team had shown signs of prolonged stress, exhaustion, vicarious trauma or burnout in the past year (professional survey, 122 respondents)', text: '95% of public service professionals said they, or someone in their team, had shown signs of prolonged stress, exhaustion, vicarious trauma or burnout.' },
+  { img: 'stat-88-would-use.png', alt: '88% said they would use one or more of the services we proposed (public survey, 88 respondents)', text: '88% said they would use one or more of the services we proposed.' },
+  { img: 'stat-96-long-term-conditions.png', alt: '96% of people living with a long-term condition said they would use courses designed around their condition (public survey, 88 respondents)', text: '96% of people living with a long-term condition said they would use courses designed around their condition.' },
+];
+
+function ImpactResearch() {
+  return (
+    <article className="impact-article">
+      <span className="status-pill">Status: Complete</span>
+      <h2>Listening first: the research behind WholeMind Resilience</h2>
+      <p className="lead">Before we designed a single course, we asked one question: what would actually help?</p>
+
+      <h3>What we did</h3>
+      <p>We chose to co-design our services with the people they&rsquo;re for. We ran an open public survey across Norfolk, which people chose to take part in, and 88 people answered. We then asked the people who support our communities, and 122 public service professionals told us what&rsquo;s happening to wellbeing in their teams. We set their answers against national research on public sector workforce wellbeing.</p>
+      <p>Because people chose to take part, the results reflect those who wanted their voice heard rather than everyone in Norfolk. That&rsquo;s exactly what co-design needs: people who care enough to shape what comes next.</p>
+      <p>We were genuinely moved by the response. More than 200 people gave their time, and many shared personal experiences, so that others might get support sooner than they did.</p>
+
+      <h3>What we found</h3>
+      <div className="findings">
+        {FINDINGS.map((f, n) => (
+          <div className={'finding' + (n % 2 ? ' flip' : '')} key={f.img}>
+            <img src={f.img} alt={f.alt} />
+            <p>{f.text}</p>
+          </div>
+        ))}
+      </div>
+
+      <h3>Meeting need, and meeting standards</h3>
+      <p>Need was only half the picture. We made an early decision to offer only evidence-based approaches, grounded in current research rather than wellbeing trends. We then mapped every service against the standards health and public sector employers work to: NICE guidance, the NHS Staff Standards and the HSE Management Standards. That way, what we offer answers what people asked for and meets what services are expected to provide.</p>
+
+      <h3>Outcomes</h3>
+      <ul>
+        <li>Three published reports, setting out community need, professional need and how our services align with national standards.</li>
+        <li>A range of services co-designed with the public and shaped by workforce evidence.</li>
+        <li>Evidence-based practice built in as a standard, not an option.</li>
+        <li>Every mindfulness course measured using the Warwick-Edinburgh Mental Wellbeing Scale, so we can show the difference it makes.</li>
+        <li>WholeMind Resilience launched on 19 November 2026, ready to deliver.</li>
+      </ul>
+
+      <h3>Read the reports</h3>
+      <ul className="report-list">
+        {REPORTS.map(r => (
+          <li key={r.title}>
+            {r.url
+              ? <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-plum">{r.title}</a>
+              : <span><b>{r.title}</b> <em className="soon">(link coming soon)</em></span>}
+            {r.note ? <span>: {r.note}</span> : null}
+          </li>
+        ))}
+      </ul>
+
+      <p className="thanks">Thank you to everyone who took part. This work is yours as much as ours.</p>
+    </article>
+  );
+}
+
 function Projects() {
-  const [open, setOpen] = useState(null);
   return (
     <div className="page">
       <div className="projects-header">
@@ -735,29 +820,15 @@ function Projects() {
         <p>This page will grow, one project at a time, as our work does.</p>
       </div>
 
-      {PROJECTS.length === 0 ? (
-        <p style={{ textAlign: 'center', color: 'var(--muted)' }}>Projects will appear here as they're added.</p>
-      ) : (
-        PROJECTS.map((p, i) => (
-          <div className="project-card" key={p.title}>
-            <h3>{p.title}</h3>
-            <p>{p.summary}</p>
-            {p.links && p.links.map(l => <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer" className="text-plum">{l.label}</a>)}
-          </div>
-        ))
-      )}
+      <ImpactResearch />
 
-      <div className="impact-stats">
-        <img className="stat-graphic" src="stat-99-public.png" alt="99% of people surveyed said they, or someone close to them, had experienced high stress, burnout or mental difficulty in the past year (public survey, 88 respondents)" />
-        <img className="stat-graphic" src="stat-88-would-use.png" alt="88% of people surveyed said they would use one or more of the services we proposed (public survey, 88 respondents)" />
-        <img className="stat-graphic" src="stat-95-professionals.png" alt="95% of public service professionals surveyed said they or their team had shown signs of prolonged stress, exhaustion, vicarious trauma or burnout in the past year (professional survey, 122 respondents)" />
-        <img className="stat-graphic" src="stat-96-long-term-conditions.png" alt="96% of people living with a long-term condition said they would use courses designed around their condition (public survey, 88 respondents)" />
-      </div>
-
-      <div className="project-card" style={{ marginTop: 40 }}>
-        <h3>Need Analysis</h3>
-        <p style={{ color: 'var(--muted)', fontStyle: 'italic' }}>Need analysis reports/PDFs will be linked here once hosted (Supabase Storage or a shared Drive folder works well for large documents — ask if you'd like this set up).</p>
-      </div>
+      {PROJECTS.map(p => (
+        <div className="project-card" key={p.title}>
+          <h3>{p.title}</h3>
+          <p>{p.summary}</p>
+          {p.links && p.links.map(l => <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer" className="text-plum">{l.label}</a>)}
+        </div>
+      ))}
       <div style={{ margin: '60px -24px -100px' }}><TrustedByBand /></div>
     </div>
   );
