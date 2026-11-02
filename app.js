@@ -85,31 +85,39 @@ const ZEFFY_CAMPAIGNS = {
 /* ---------- NAV ---------- */
 const NAV_ITEMS = [
   ['home', 'Home'],
-  ['about', 'About Us'],
+  ['about', 'About Us', [['about', 'About Us'], ['projects', 'Our Impact']]],
   ['programmes-individuals', 'Programmes'],
   ['events', 'Events'],
   ['news', 'News'],
   ['involved', 'Get Involved'],
-  ['participants', 'Course Participants'],
+  ['participants', 'My Course'],
   ['contact', 'Contact'],
 ];
 
 function Nav({ route }) {
   const isProgrammes = route.startsWith('programmes');
   const isAbout = route === 'about' || route === 'projects';
+  const isCourse = route.startsWith('participants');
   return (
     <nav className="site-nav">
       <div className="nav-inner">
         <button className="logo" onClick={() => go('home')}>
-          <img className="woodmark" src="logos/logo-woodmark.svg" alt="WholeMind Resilience" />
+          <img className="woodmark" src="logo-woodmark.svg" alt="WholeMind Resilience" />
         </button>
         <ul className="nav-links">
-          {NAV_ITEMS.map(([key, label]) => (
-            <li key={key}>
+          {NAV_ITEMS.map(([key, label, sub]) => (
+            <li key={key} className={sub ? 'has-sub' : ''}>
               <button
-                className={(route === key || (key === 'programmes-individuals' && isProgrammes) || (key === 'about' && isAbout)) ? 'active' : ''}
+                className={(route === key || (key === 'programmes-individuals' && isProgrammes) || (key === 'about' && isAbout) || (key === 'participants' && isCourse)) ? 'active' : ''}
                 onClick={() => go(key)}
-              >{label}</button>
+              >{label}{sub ? <span className="caret"> &#9662;</span> : null}</button>
+              {sub && (
+                <ul className="sub-menu">
+                  {sub.map(([k, l]) => (
+                    <li key={k}><button className={route === k ? 'active' : ''} onClick={() => go(k)}>{l}</button></li>
+                  ))}
+                </ul>
+              )}
             </li>
           ))}
         </ul>
@@ -143,22 +151,58 @@ function SubscribeBanner() {
   );
 }
 
+/* ---------- TESTIMONIALS ----------
+   To add a testimonial, copy one line inside the list below, keeping the
+   quote marks and commas. While the list is empty, nothing shows on the
+   site at all. Always get the person's permission before quoting them.
+   Example:
+   { quote: 'This course changed how I handle a hard day.', name: 'Course participant', role: 'Norwich, 2026' },
+*/
+const TESTIMONIALS = [
+];
+
+function TestimonialCarousel() {
+  const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const count = TESTIMONIALS.length;
+  useEffect(() => {
+    if (count < 2 || paused) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const t = setInterval(() => setI(n => (n + 1) % count), 7000);
+    return () => clearInterval(t);
+  }, [count, paused]);
+  if (count === 0) return null;
+  const t = TESTIMONIALS[i % count];
+  return (
+    <div className="testimonials" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} aria-live="polite">
+      <blockquote key={i}>
+        <p>&ldquo;{t.quote}&rdquo;</p>
+        <footer>{t.name}{t.role ? ', ' + t.role : ''}</footer>
+      </blockquote>
+      {count > 1 && (
+        <div className="t-dots">
+          {TESTIMONIALS.map((_, n) => (
+            <button key={n} className={n === i ? 'on' : ''} aria-label={'Show testimonial ' + (n + 1)} onClick={() => setI(n)} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ---------- TRUSTED BY BAND ----------
-   Logos + (later) testimonial gallery. Testimonial gallery intentionally
-   not built yet — no testimonials exist yet per the content map; add
-   that section when copy/quotes are ready.
+   Shown on Home, News and Our Impact. Logos plus the testimonial
+   carousel (hidden until TESTIMONIALS above has something in it).
 */
 function TrustedByBand() {
   return (
     <div className="trusted-band">
       <h3>Trusted and supported by</h3>
       <div className="trusted-logos">
-        <SiteImage
-          src="img/fuse-network-logo.png"
-          alt="FUSE Network"
-          caption="FUSE Network logo — save as img/fuse-network-logo.png"
-        />
+        <SiteImage src="fuse-network-logo.png" alt="FUSE Network" caption="FUSE Network logo" />
+        <SiteImage src="ncsun-cic-logo.png" alt="NCSUN CIC" caption="NCSUN CIC logo" />
       </div>
+      <TestimonialCarousel />
     </div>
   );
 }
@@ -168,8 +212,8 @@ function Footer() {
   return (
     <footer className="site-footer">
       <div className="footer-badges">
-        <SiteImage src="img/badge-trauma-informed.png" alt="Trauma-Informed Certified" caption="Trauma-Informed badge" />
-        <SiteImage className="wide" src="img/badge-mindfulnessuk-cmr.png" alt="MindfulnessUK CMR Teacher, accredited for teaching" caption="MindfulnessUK CMR Teacher badge" />
+        <SiteImage src="badge-trauma-informed.png" alt="Trauma-Informed Certified" caption="Trauma-Informed badge" />
+        <SiteImage className="wide" src="badge-mindfulnessuk-cmr.png" alt="MindfulnessUK CMR Teacher, accredited for teaching" caption="MindfulnessUK CMR Teacher badge" />
         {/* BAMBA badge to be added once available */}
       </div>
       <div className="foot-links">
@@ -275,14 +319,14 @@ I spent more than ten years in education leadership, working with children with 
 I decided to do something which genuinely worked to support people's wellbeing, and prevent harm.
 
 Outside work, I'm a hobby artist, a motorbike rider, and usually found nose-deep in a book, cooking to classical music or dancing to a beat. I'm human, imperfect, gentle, fierce and kind, and I believe we all deserve the chance to stay well.`,
-    photo: { src: 'img/founder.jpg', caption: 'Photo of Annamarie', portrait: true }
+    photo: { src: 'founder.jpg', caption: 'Photo of Annamarie', portrait: true }
   },
   {
     title: 'Meet the Directors',
     header: 'Tim Winters — Non-Executive Director',
     body: `Tim has joined WholeMind Resilience from the very beginning, supporting the formation phase and helping to shape an organisation grounded in integrity from day one.
 
-Driven by the belief that there is no health without mental health, Tim saw the social value at the heart of WholeMind Resilience clearly aligning with his own values. That alignment prompted him to offer his time and expertise to the team.
+Driven by the belief that there is no health without mental health, Tim saw the social impact ambitions at the heart of WholeMind Resilience clearly aligning with his own values. That alignment prompted him to offer his time and expertise to the team.
 
 Tim brings a strong public-service ethos and deep expertise in public health and analytics. His professional journey spans an Oceanography PhD, insurance financial modelling, and leading health and care analytical teams — a combination that gives him a unique perspective on how to address complex community challenges.
 
@@ -293,8 +337,7 @@ He brings this expertise in evidence evaluation and resource allocation to Whole
 Personally committed to wellbeing, Tim stays active and connected through running, cycling and occasional dad dancing.
 
 WholeMind Resilience is deeply grateful for the experience and clarity Tim brings to the team, and for the way his perspective and integrity will help shape our work, and our impact.`,
-    photo: { src: 'img/director-tim.jpg', caption: 'Photo of Tim — to follow. Save as img/director-tim.jpg' },
-    note: 'Note: a second director bio and photo will be added here later.'
+    photo: { src: 'director-tim.jpg', caption: 'Photo of Tim — to follow. Save as director-tim.jpg' },
   },
 ];
 
@@ -347,14 +390,14 @@ function About() {
 const PROGRAMMES = {
   individuals: {
     heading: 'For Individuals & Communities',
-    icon: 'logos/icon-public-mindful-sessions.svg',
+    icon: 'icon-public-mindful-sessions.svg',
     intro: `Running on empty, or watching your team run on empty? You're not alone, and you don't have to wait until it all gets too much. Whether you're carrying stress yourself or carrying it for the people you lead, our programmes offer practical, evidence-based support that fits real life, before pressure becomes crisis.`,
     introLast: 'Choose the path that fits below:',
     items: [
-      { title: 'Mindfulness Tuition', icon: 'logos/icon-cmr.svg', text: 'The Compassionate Mindful Resilience (CMR) Programme is an 8-hour, trauma-informed mindfulness and compassion course developed by MindfulnessUK. Four 2-hour workshops over 4 weeks, teaching you how to use accessible mindfulness in everyday life.\n\nAvailable online & in Norfolk venues.', stat: 'img/stat-99-public.png', statAlt: '99% of people surveyed said they, or someone close to them, had experienced high stress, burnout or mental difficulty in the past year (public survey, 88 respondents)' },
-      { title: 'Mindfulness & Meditation Sessions', icon: 'logos/icon-public-mindful-sessions.svg', text: 'Join gentle, purposeful mindfulness sessions designed to help you pause, regulate and reconnect. Regular opportunities to practice, and take time for your wellbeing. No experience necessary. Available online and in Norfolk-based venues.' },
-      { title: 'Mindfulness Coaching', icon: 'logos/icon-coaching-dialogue.svg', text: '1:1 mindfulness coaching offers a quiet, personal space to explore how mindfulness can support you in the context of your own life.', cta: 'Get in touch', ctaTo: 'contact' },
-      { title: 'Community Wellbeing Workshops', icon: 'logos/icon-public-workshops.svg', text: 'A gentle, accessible, trauma-informed space to learn, explore and practise tools and activities that support positive mental wellbeing, and community connection.', stat: 'img/stat-88-would-use.png', statAlt: '88% of people surveyed said they would use one or more of the services we proposed (public survey, 88 respondents)' },
+      { title: 'Mindfulness Tuition', icon: 'icon-cmr.svg', text: 'The Compassionate Mindful Resilience (CMR) Programme is an 8-hour, trauma-informed mindfulness and compassion course developed by MindfulnessUK. Four 2-hour workshops over 4 weeks, teaching you how to use accessible mindfulness in everyday life.\n\nAvailable online & in Norfolk venues.' },
+      { title: 'Mindfulness & Meditation Sessions', icon: 'icon-public-mindful-sessions.svg', text: 'Join gentle, purposeful mindfulness sessions designed to help you pause, regulate and reconnect. Regular opportunities to practice, and take time for your wellbeing. No experience necessary. Available online and in Norfolk-based venues.' },
+      { title: 'Mindfulness Coaching', icon: 'icon-coaching-dialogue.svg', text: '1:1 mindfulness coaching offers a quiet, personal space to explore how mindfulness can support you in the context of your own life.', cta: 'Get in touch', ctaTo: 'contact' },
+      { title: 'Community Wellbeing Workshops', icon: 'icon-public-workshops.svg', text: 'A gentle, accessible, trauma-informed space to learn, explore and practise tools and activities that support positive mental wellbeing, and community connection.' },
     ],
     bottomButton: { label: 'See dates and book', to: 'events' },
     outro: `Not sure which is right for you? Contact us to talk it through.`,
@@ -362,15 +405,15 @@ const PROGRAMMES = {
   },
   professionals: {
     heading: 'For Professionals & Teams',
-    icon: 'logos/icon-teams-reflective-practice.svg',
+    icon: 'icon-teams-reflective-practice.svg',
     intro: `Designed specifically for people in high-demand roles, these trauma-informed preventative trainings and services are delivered by facilitators who bring lived experience, and public service knowledge.`,
     bulletsIntro: 'Effective solutions for professionals and teams across:',
     bullets: ['Health', 'Social care', 'Care homes and community care', 'Councils', 'Blue light services', 'Education', 'VCSE sector'],
     alignNote: 'Aligns with NICE guidance NG212, NG13 & QS147 & the 2026 NHS Staff Standards Framework',
     items: [
-      { title: 'CMR for Teams', icon: 'logos/icon-cmr.svg', text: 'An 8-hour, research-backed, trauma-informed mindfulness and compassion training for staff experiencing pressure, emotional load and compassion fatigue. Developed by MindfulnessUK, the Compassionate and Mindful Resilience (CMR) programme teaches accessible, short, realistic practices which can be used in high-demand roles to reduce stress, vicarious trauma and burnout.\n\nDelivered to teams of up to 15: online or in person as 4 × 2-hour or 2 × 4-hour workshops, over 4–6 weeks.', stat: 'img/stat-95-professionals.png', statAlt: '95% of public service professionals surveyed said they or their team had shown signs of prolonged stress, exhaustion, vicarious trauma or burnout in the past year (professional survey, 122 respondents)' },
-      { title: 'Compassion Based Reflective Practice', icon: 'logos/icon-teams-reflective-practice.svg', text: `A trauma-informed, facilitated space for teams to prioritise wellbeing — pausing to reflect, with compassion for themselves and others, on the human impact of their work. Designed to work with small or large groups as a single CPD session or an ongoing space to build resilience and strengthen wellbeing over time.\n\nAvailable for groups:\n• Online — nationally\n• In person — Norfolk only` },
-      { title: 'Workshops: Stress, Burnout & Vicarious Trauma', icon: 'logos/icon-workshops-windingpath.svg', text: `A gentle, practical space for staff to learn about stress, burnout and vicarious trauma in a way that feels human and relatable. Engaging workshops shaped around your team's specific needs, built to fit naturally into CPD days, and grounded in real lived experience.\n\nAvailable for small or large groups.` },
+      { title: 'CMR for Teams', icon: 'icon-cmr.svg', text: 'An 8-hour, research-backed, trauma-informed mindfulness and compassion training for staff experiencing pressure, emotional load and compassion fatigue. Developed by MindfulnessUK, the Compassionate and Mindful Resilience (CMR) programme teaches accessible, short, realistic practices which can be used in high-demand roles to reduce stress, vicarious trauma and burnout.\n\nDelivered to teams of up to 15: online or in person as 4 × 2-hour or 2 × 4-hour workshops, over 4–6 weeks.', stat: 'stat-95-professionals.png', statAlt: '95% of public service professionals surveyed said they or their team had shown signs of prolonged stress, exhaustion, vicarious trauma or burnout in the past year (professional survey, 122 respondents)' },
+      { title: 'Compassion Based Reflective Practice', icon: 'icon-teams-reflective-practice.svg', text: `A trauma-informed, facilitated space for teams to prioritise wellbeing — pausing to reflect, with compassion for themselves and others, on the human impact of their work. Designed to work with small or large groups as a single CPD session or an ongoing space to build resilience and strengthen wellbeing over time.\n\nAvailable for groups:\n• Online — nationally\n• In person — Norfolk only` },
+      { title: 'Workshops: Stress, Burnout & Vicarious Trauma', icon: 'icon-workshops-windingpath.svg', text: `A gentle, practical space for staff to learn about stress, burnout and vicarious trauma in a way that feels human and relatable. Engaging workshops shaped around your team's specific needs, built to fit naturally into CPD days, and grounded in real lived experience.\n\nAvailable for small or large groups.` },
     ],
     outroHeading: 'Ready to shift towards prevention for your team?',
     outro: `Not sure yet what that looks like? That's a good place to start. Tell us what's happening for your team and we'll talk it through together, with no pressure. If we're the right fit, we'll shape support around your team's time and your budget, online or in person.\n\nHow it works: a short conversation about what your team needs → a proposal built around your capacity and budget → flexible delivery, online or in person.`,
@@ -378,13 +421,13 @@ const PROGRAMMES = {
   },
   systems: {
     heading: 'For Systems & Providers',
-    icon: 'logos/icon-system-scalable-prevention.svg',
+    icon: 'icon-system-scalable-prevention.svg',
     intro: `Prevention at scale, for your workforce and the people you serve.\n\nWe support providers and larger systems in two ways: staff wellbeing programmes for your workforce, and flexible, bespoke prevention programmes for patients and communities, shaped around what your organisation or neighbourhood needs.`,
     alignNote: 'Mapped to NICE guidance NG212, NG13 and QS147, the NHS Staff Standards (2026) and the HSE Management Standards.',
     items: [
-      { title: 'CMR for Phased Return', icon: 'logos/icon-cmr.svg', text: 'An 8-hour, research-backed, trauma-informed mindfulness and compassion programme for staff on, or recently returned from, a phased return — designed to reduce the risk of burnout during one of the highest-risk periods for staff wellbeing. Developed by MindfulnessUK, the Compassionate & Mindful Resilience (CMR) programme teaches accessible, short, realistic practices that help staff rebuild confidence and regulate pressure as they re-enter demanding roles.\n\nAligned with NICE guidance for staff wellbeing and the new NHS staff standards, which require organisations to take a preventative, evidence-based approach to staff health and wellbeing.\n\nDelivered online as 4 × 2-hour workshops, over 4–6 weeks. Each cohort can accommodate up to 15 participants — a scalable way for large organisations to support staff consistently across teams, departments or sites.' },
-      { title: 'Safe Leader Space', icon: 'logos/icon-safe-leader-space.svg', text: `Leaders often carry as much strain as the teams they support, with far less room to show it. When people look to you for confidence and direction, being open about the pressure can feel impossible.\n\nSafe Leader Space is a protected, trauma-informed space for leaders to put their own wellbeing first. Facilitated, themed sessions give you time to pause, reflect and be honest about the weight you carry, away from your own team. Along the way, you'll build compassion for yourself and learn to hold compassionate spaces for others.\n\nOnline, in blocks of at least five sessions.`, stat: 'img/stat-96-long-term-conditions.png', statAlt: '96% of people living with a long-term condition said they would use courses designed around their condition (public survey, 88 respondents)' },
-      { title: 'Scalable Neighbourhood Prevention', icon: 'logos/icon-system-scalable-prevention.svg', text: `A flexible, non-clinical prevention offer, shaped around what your organisation and the people you serve need. This isn't a fixed package.\n\nIt can sit wherever prevention is needed: group courses for people on waiting lists, courses for specific long-term conditions, ongoing support in Neighbourhood Health Centres, or programmes commissioned by GP practices or social care for their patients and clients.\n\nWholeMind Resilience coordinates a network of accredited practitioners, so delivery can grow with your community's capacity, from a single course to an ongoing programme of practice groups.\n\nEvery version stays practical, trauma-informed and grounded in real life. It isn't therapy or a mental health service. It's preventative support for people who don't yet need specialist care.\n\nLet's talk through what this could look like for you.` },
+      { title: 'CMR for Phased Return', icon: 'icon-cmr.svg', text: 'An 8-hour, research-backed, trauma-informed mindfulness and compassion programme for staff on, or recently returned from, a phased return — designed to reduce the risk of burnout during one of the highest-risk periods for staff wellbeing. Developed by MindfulnessUK, the Compassionate & Mindful Resilience (CMR) programme teaches accessible, short, realistic practices that help staff rebuild confidence and regulate pressure as they re-enter demanding roles.\n\nAligned with NICE guidance for staff wellbeing and the new NHS staff standards, which require organisations to take a preventative, evidence-based approach to staff health and wellbeing.\n\nDelivered online as 4 × 2-hour workshops, over 4–6 weeks. Each cohort can accommodate up to 15 participants — a scalable way for large organisations to support staff consistently across teams, departments or sites.' },
+      { title: 'Safe Leader Space', icon: 'icon-safe-leader-space.svg', text: `Leaders often carry as much strain as the teams they support, with far less room to show it. When people look to you for confidence and direction, being open about the pressure can feel impossible.\n\nSafe Leader Space is a protected, trauma-informed space for leaders to put their own wellbeing first. Facilitated, themed sessions give you time to pause, reflect and be honest about the weight you carry, away from your own team. Along the way, you'll build compassion for yourself and learn to hold compassionate spaces for others.\n\nOnline, in blocks of at least five sessions.`, stat: 'stat-96-long-term-conditions.png', statAlt: '96% of people living with a long-term condition said they would use courses designed around their condition (public survey, 88 respondents)' },
+      { title: 'Scalable Neighbourhood Prevention', icon: 'icon-system-scalable-prevention.svg', text: `A flexible, non-clinical prevention offer, shaped around what your organisation and the people you serve need. This isn't a fixed package.\n\nIt can sit wherever prevention is needed: group courses for people on waiting lists, courses for specific long-term conditions, ongoing support in Neighbourhood Health Centres, or programmes commissioned by GP practices or social care for their patients and clients.\n\nWholeMind Resilience coordinates a network of accredited practitioners, so delivery can grow with your community's capacity, from a single course to an ongoing programme of practice groups.\n\nEvery version stays practical, trauma-informed and grounded in real life. It isn't therapy or a mental health service. It's preventative support for people who don't yet need specialist care.\n\nLet's talk through what this could look like for you.` },
     ],
     outroHeading: 'Ready to talk about prevention for your organisation or population?',
     outro: '',
@@ -489,7 +532,7 @@ function Events() {
         <div className="eyebrow">Events &amp; Courses</div>
         <h1>Find and book your place on our upcoming public events</h1>
         <p>New courses, sessions and workshops are added regularly. If you can't find what you're looking for, or you'd like to book 1-2-1 support, <a href="#/contact" className="text-plum">get in touch</a> and we'll let you know when new dates are added.</p>
-        <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>We take bookings and payments through Zeffy, which helps keep costs low for non-profits like us. At checkout, Zeffy will suggest an optional contribution to support their platform. It isn't required, and you can change it to £0 if you'd prefer.</p>
+        <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>We take bookings and payments through Zeffy, which helps keep costs low for non-profits like us. At checkout, Zeffy will suggest an optional contribution to support their platform. This cost is not mandatory and you may reduce it to £0 if you wish.</p>
       </div>
       <div className="events-columns">
         {EVENT_COLUMNS.map(col => (
@@ -528,11 +571,40 @@ function SimplePage({ eyebrow, title, icon, children }) {
    expandable list, ready for content. Empty for now.
 */
 const NEWS_POSTS = [
-  // { title: 'First post title', date: 'Aug 2026', body: '...', images: [] },
+  {
+    title: 'WholeMind Resilience launches on 19 November',
+    date: 'November 2026',
+    body: (
+      <div className="news-body">
+        <p>After months of listening, planning and preparing, WholeMind Resilience opens its doors on Thursday 19 November.</p>
+
+        <h4>Why we&rsquo;re here</h4>
+        <p>Stress and burnout have quietly become part of everyday life, for people trying to hold everything together and for the professionals working hard to support them. We believe much of this can be prevented, if people have the right support early enough. That&rsquo;s what we&rsquo;re here to offer.</p>
+
+        <h4>Built on what you told us</h4>
+        <p>Before we designed a single course, we asked. 88 people answered our public survey, and 122 public service professionals told us about wellbeing in their teams. We also researched what&rsquo;s happening across public sector workforce wellbeing. Everything we offer, and how we offer it, has been shaped by what we heard.</p>
+        <p>To everyone who took the time to answer: thank you. This launch belongs to you as much as to us.</p>
+
+        <h4>Come and meet us</h4>
+        <p>We&rsquo;re launching at the Social Enterprise Showcase Day at Carrow House, Norwich, on 19 November. The event is run by FUSE Network, a Community Interest Company that supports the not-for-profit sector in our area. As members, we&rsquo;ve had their support to set up and run well from the very start.</p>
+        <p>Come and find our stand, say hello, and pick up a welcome card with 25% off any of our services, right through to June 2027!</p>
+        <p><a className="cta-btn" href="https://www.eventbrite.co.uk/e/social-enterprise-day-showcase-2026-public-event-tickets-1985935085300" target="_blank" rel="noopener noreferrer">Get your tickets</a></p>
+        <SiteImage className="news-logo" src="fuse-network-logo.png" alt="FUSE Network" caption="FUSE Network logo" />
+
+        <h4>Our big launch offer</h4>
+        <p>Our first two online mindfulness courses being delivered in Winter &amp; Spring are 60% off, limited to 24 places in total. Use code <b>BAMBA</b> at checkout to take advantage of our offer.</p>
+        <p><button className="cta-btn" onClick={() => go('events')}>See courses and book</button></p>
+        <p>Can&rsquo;t join us on 19th November? <a href="#/home" className="text-plum">Join our mailing list</a> or <a href="#/contact" className="text-plum">get in touch</a> and we&rsquo;ll send you a 25% welcome card.</p>
+
+        <h4>Help us build a community</h4>
+        <p>We&rsquo;re just getting started on Facebook, Instagram and LinkedIn, and we&rsquo;d love you to be part of it. Follow us at /wholemindresilience, say hello, and share us with anyone you think we could help.</p>
+      </div>
+    ),
+  },
 ];
 
 function News() {
-  const [open, setOpen] = useState(null);
+  const [open, setOpen] = useState(0);
   return (
     <div className="page">
       <div className="page-header">
@@ -548,18 +620,19 @@ function News() {
               <button className="acc-head" onClick={() => setOpen(open === i ? -1 : i)}>
                 {post.title} <span className="plus">{open === i ? '–' : '+'}</span>
               </button>
-              {open === i && <div className="acc-body">{post.body}</div>}
+              {open === i && <div className="acc-body">{post.date && <p className="news-date">{post.date}</p>}{post.body}</div>}
             </div>
           ))}
         </div>
       )}
+      <div style={{ margin: '60px -24px -100px' }}><TrustedByBand /></div>
     </div>
   );
 }
 
 /* ---------- OUR IMPACT (sub-page of About Us; route stays #/projects) ----------
    Collapsible project boxes, same accordion style as About. Each box
-   can hold text, logos/images/video and report links — extend the
+   can hold text, images/video and report links — extend the
    PROJECTS array below as real projects are added.
 
    Need Analysis reports: large PDFs/reports are better hosted outside
@@ -595,10 +668,16 @@ function Projects() {
         ))
       )}
 
+      <div className="impact-stats">
+        <img className="stat-graphic" src="stat-99-public.png" alt="99% of people surveyed said they, or someone close to them, had experienced high stress, burnout or mental difficulty in the past year (public survey, 88 respondents)" />
+        <img className="stat-graphic" src="stat-88-would-use.png" alt="88% of people surveyed said they would use one or more of the services we proposed (public survey, 88 respondents)" />
+      </div>
+
       <div className="project-card" style={{ marginTop: 40 }}>
         <h3>Need Analysis</h3>
         <p style={{ color: 'var(--muted)', fontStyle: 'italic' }}>Need analysis reports/PDFs will be linked here once hosted (Supabase Storage or a shared Drive folder works well for large documents — ask if you'd like this set up).</p>
       </div>
+      <div style={{ margin: '60px -24px -100px' }}><TrustedByBand /></div>
     </div>
   );
 }
@@ -613,10 +692,10 @@ function GetInvolved() {
       <p><b>Donations</b> — Your donations go straight into local community work, creating impact in people's lives. Every £15 raised funds a place on one of our mindfulness sessions for someone who couldn't otherwise afford it. Every £200 raised funds a full course for an individual, or a workshop for a community or volunteer group. Every contribution — whatever the size — directly enables sessions for individuals and voluntary organisations who would otherwise go without. Give once, or set up a regular donation to help us plan further ahead.</p>
 
       <div style={{ textAlign: 'center', margin: '28px 0' }}>
-        <ZeffyEmbed zeffyUrl={ZEFFY_CAMPAIGNS.donate} label="Donate Now" />
+        <ZeffyEmbed zeffyUrl={ZEFFY_CAMPAIGNS.donate} label="Donate" />
       </div>
 
-      <p><b>Corporate Sponsorship</b> — Corporate partners could help us reach more people across the region, at scale. Sponsorship doesn't have to mean funding — it can also mean rooms to deliver classes closer to communities, equipment, training places for staff and volunteers, or refreshments for events. In return, all corporate sponsors receive: logo placement on our website, a public thank-you mention in our blog, social media acknowledgement, and — for support over £1000 in value — an impact report showing exactly how your contribution strengthened wellbeing in local communities.</p>
+      <p><b>Corporate Sponsorship</b> — Corporate partners could help us reach more people across the region, at scale. Sponsorship doesn't have to mean funding — it can also mean rooms to deliver classes closer to communities, equipment, training places for staff and volunteers, or refreshments for events. In return, all corporate sponsors receive: logo placement on our website, a public thank-you mention in our blog, social media acknowledgement, and — for support over £1000 in value — an impact report showing exactly how your contribution strengthened wellbeing in local communities. Your support helps us reach disadvantaged groups and voluntary-sector teams who couldn't otherwise access this work — funding anything from a single place or person, to a full programme for a specific team or community.</p>
 
       <p><b>Fundraising</b> — If you choose to fundraise for WholeMind Resilience, you're directly impacting the lives of people in the community who need support the most. Every pound raised helps us deliver accessible wellbeing programmes to individuals and groups facing disadvantage, pressure or limited access to services. We'd love to hear your ideas — a personal challenge, a whip-round at an event, or help putting a fundraiser together. WholeMind will thank our fundraisers publicly, and share how their contribution made a difference.</p>
 
@@ -713,7 +792,7 @@ function PasswordGate({ which, onSuccess, label }) {
 
 function CourseContentWelcome({ heading, icon }) {
   return (
-    <SimplePage eyebrow="Course Participants" title={heading} icon={icon}>
+    <SimplePage eyebrow="My Course" title={heading} icon={icon}>
       <p>This is your space to use during your course and to come back to whenever you need it. Recordings, practices and materials are all in one place, for as long as you need them.</p>
       <p><b>How to use this page</b><br />While you're on your course, use only the sections you've been taught. Your teacher will let you know which ones you're working on each week. Once your course has finished, you can keep using these materials. There's no right or wrong way to practise, so choose the practices that work best for you in the moment.</p>
       <p>To get the full benefit, we recommend practising at least three times a week, and ideally five.</p>
@@ -731,7 +810,7 @@ function CMRCourseParticipants() {
   if (!unlocked) {
     return <PasswordGate which="cmr" onSuccess={() => setUnlocked(true)} label="CMR Course Participants" />;
   }
-  return <CourseContentWelcome heading="Welcome to the CMR course online portal" icon="logos/icon-cmr.svg" />;
+  return <CourseContentWelcome heading="Welcome to the CMR course online portal" icon="icon-cmr.svg" />;
 }
 
 function WholeMindCourseParticipants() {
@@ -739,15 +818,15 @@ function WholeMindCourseParticipants() {
   if (!unlocked) {
     return <PasswordGate which="wholemind" onSuccess={() => setUnlocked(true)} label="WholeMind Course Participants" />;
   }
-  return <CourseContentWelcome heading="Welcome to your WholeMind Mindfulness Course" icon="logos/logo-mark-only.svg" />;
+  return <CourseContentWelcome heading="Welcome to your WholeMind Mindfulness Course" icon="logo-mark-only.svg" />;
 }
 
 function CourseParticipantsHub() {
   return (
     <div className="page">
       <div className="page-header">
-        <div className="eyebrow">Course Participants</div>
-        <h1>Course Materials</h1>
+        <div className="eyebrow">My Course</div>
+        <h1>My Course</h1>
         <p>Choose your course below.</p>
       </div>
       <div className="cp-hub">
