@@ -238,6 +238,9 @@ function Footer() {
         {/* BAMBA badge to be added once available */}
       </div>
       <div className="foot-links">
+        <a href="https://www.facebook.com/wholemindresilience/" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://www.instagram.com/wholemindresilience" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.linkedin.com/company/wholemindresilience" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         <a href="#/policy-privacy">Privacy</a>
         <a href="#/policy-safeguarding">Safeguarding</a>
         <a href="#/policy-terms">Terms &amp; Conditions</a>
@@ -618,7 +621,7 @@ const NEWS_POSTS = [
         <p>Can&rsquo;t join us on 19th November? <a href="#/home" className="text-plum">Join our mailing list</a> or <a href="#/contact" className="text-plum">get in touch</a> and we&rsquo;ll send you a 25% welcome card.</p>
 
         <h4>Help us build a community</h4>
-        <p>We&rsquo;re just getting started on Facebook, Instagram and LinkedIn, and we&rsquo;d love you to be part of it. Follow us at /wholemindresilience, say hello, and share us with anyone you think we could help.</p>
+        <p>We&rsquo;re just getting started on <a href="https://www.facebook.com/wholemindresilience/" target="_blank" rel="noopener noreferrer" className="text-plum">Facebook</a>, <a href="https://www.instagram.com/wholemindresilience" target="_blank" rel="noopener noreferrer" className="text-plum">Instagram</a> and <a href="https://www.linkedin.com/company/wholemindresilience" target="_blank" rel="noopener noreferrer" className="text-plum">LinkedIn</a>, and we&rsquo;d love you to be part of it. Follow us at /wholemindresilience, say hello, and share us with anyone you think we could help.</p>
       </div>
     ),
   },
