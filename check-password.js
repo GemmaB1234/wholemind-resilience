@@ -40,7 +40,8 @@ export default function handler(req, res) {
     return res.status(500).json({ success: false, error: 'Password not configured yet' });
   }
 
-  if (password === correctPassword) {
+  // Trim stray spaces (phones often add one after autocomplete)
+  if (typeof password === 'string' && password.trim() === correctPassword.trim()) {
     return res.status(200).json({ success: true });
   }
 
