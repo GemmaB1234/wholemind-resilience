@@ -147,6 +147,7 @@ const NAV_CSS = `
 .report-list li{ padding:10px 14px; background:var(--sage-tint); border-radius:12px; }
 .soon{ color:var(--muted); font-size:13px; }
 .thanks{ margin-top:22px !important; font-family:'Playfair Display',serif; font-size:17px !important; color:var(--sage-deep); text-align:center; }
+.news-logo{ width:110px !important; max-width:110px !important; height:auto !important; margin:4px 0 8px !important; opacity:.95; }
 .gi-section{ margin:0 0 30px; padding:0 0 26px; border-bottom:1px solid var(--line); }
 .gi-section:last-of-type{ border-bottom:none; }
 .gi-section h2{ font-size:22px; color:var(--sage-deep); margin:0 0 10px; }
