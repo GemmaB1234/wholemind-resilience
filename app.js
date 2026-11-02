@@ -148,7 +148,7 @@ const NAV_CSS = `
 .soon{ color:var(--muted); font-size:13px; }
 .thanks{ margin-top:22px !important; font-family:'Playfair Display',serif; font-size:17px !important; color:var(--sage-deep); text-align:center; }
 .news-logo{ width:110px !important; max-width:110px !important; height:auto !important; margin:4px 0 8px !important; opacity:.95; }
-@media (max-width:560px){ .zeffy-subscribe-frame{ height:480px !important; } }
+@media (max-width:560px){ .zeffy-subscribe-frame{ height:440px !important; } }
 .gi-section{ margin:0 0 30px; padding:0 0 26px; border-bottom:1px solid var(--line); }
 .gi-section:last-of-type{ border-bottom:none; }
 .gi-section h2{ font-size:22px; color:var(--sage-deep); margin:0 0 10px; }
@@ -231,9 +231,9 @@ function Nav({ route }) {
 */
 function SubscribeBanner() {
   return (
-    <div className="subscribe-band thin">
-      <p>Join our community for updates on courses, events and wellbeing resources</p>
-      <div className="zeffy-subscribe-frame" style={{ position: 'relative', width: '100%', maxWidth: 560, height: 400, margin: '18px auto 0' }}>
+    <div className="subscribe-band thin" style={{ padding: '20px 16px 22px' }}>
+      <p style={{ margin: 0 }}>Join our community for updates on courses, events and wellbeing resources</p>
+      <div className="zeffy-subscribe-frame" style={{ position: 'relative', width: '100%', maxWidth: 520, height: 360, margin: '12px auto 0', background: '#fff', borderRadius: 16, overflow: 'hidden' }}>
         <iframe
           title="Signup form powered by Zeffy"
           style={{ position: 'absolute', border: 0, top: 0, left: 0, bottom: 0, right: 0, width: '100%', height: '100%' }}
