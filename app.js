@@ -129,6 +129,12 @@ const NAV_CSS = `
 .social-links{ display:inline-flex; align-items:center; gap:12px; }
 .social-links a{ display:inline-flex; align-items:center; gap:6px; color:var(--sage-deep); opacity:.8; transition:opacity .15s, transform .15s; text-decoration:none; font-size:14px; font-weight:600; }
 .social-links a:hover{ opacity:1; transform:translateY(-1px); }
+.gi-section{ margin:0 0 30px; padding:0 0 26px; border-bottom:1px solid var(--line); }
+.gi-section:last-of-type{ border-bottom:none; }
+.gi-section h2{ font-size:22px; color:var(--sage-deep); margin:0 0 10px; }
+.gi-section p{ margin:0 0 12px; }
+.gi-section ul{ margin:0 0 14px; padding-left:22px; }
+.gi-section li{ margin:0 0 6px; }
 @media (max-width:1060px){
   .nav-inner{ flex-direction:column; padding:6px 16px 10px; }
   .nav-links{ flex-wrap:wrap; justify-content:center; row-gap:4px; }
@@ -759,23 +765,47 @@ function Projects() {
 
 function GetInvolved() {
   return (
-    <SimplePage eyebrow="Get Involved" title="Support us to support communities">
-      <p>If you or your organisation are passionate about supporting people in the community, or you have experienced your own difficulty and would like to help others, there are several ways you can get involved:</p>
+    <SimplePage eyebrow="Get Involved" title="Get involved">
+      <p style={{ textAlign: 'center', color: 'var(--muted)', fontSize: 16, maxWidth: 620, margin: '0 auto 34px' }}>Whether you want to support people in your community, or you&rsquo;ve been through your own difficult times and want to help others, there are lots of ways to be part of WholeMind Resilience.</p>
 
-      <p><b>Volunteering</b> — As WholeMind Resilience grows, volunteers will help us reach more people, more often. Whether it's an hour, a single task, or ongoing support at events, offering your time, expertise or skills — from community activities to fundraising — helps us reinvest more into the programmes that need it.</p>
-
-      <p><b>Donations</b> — Your donations go straight into local community work, creating impact in people's lives. Every £15 raised funds a place on one of our mindfulness sessions for someone who couldn't otherwise afford it. Every £200 raised funds a full course for an individual, or a workshop for a community or volunteer group. Every contribution — whatever the size — directly enables sessions for individuals and voluntary organisations who would otherwise go without. Give once, or set up a regular donation to help us plan further ahead.</p>
-
-      <div style={{ textAlign: 'center', margin: '28px 0' }}>
-        <ZeffyEmbed zeffyUrl={ZEFFY_CAMPAIGNS.donate} label="Donate" />
+      <div className="gi-section">
+        <h2>Volunteering</h2>
+        <p>As we grow, volunteers will help us reach more people, more often. You might give an hour, help with a single task, or support us at events. Every skill counts, from community activities, to helping us with tasks, to fundraising, and the time you give means more of our income goes back into our programmes.</p>
       </div>
 
-      <p><b>Corporate Sponsorship</b> — Corporate partners could help us reach more people across the region, at scale. Sponsorship doesn't have to mean funding — it can also mean rooms to deliver classes closer to communities, equipment, training places for staff and volunteers, or refreshments for events. In return, all corporate sponsors receive: logo placement on our website, a public thank-you mention in our blog, social media acknowledgement, and — for support over £1000 in value — an impact report showing exactly how your contribution strengthened wellbeing in local communities. Your support helps us reach disadvantaged groups and voluntary-sector teams who couldn't otherwise access this work — funding anything from a single place or person, to a full programme for a specific team or community.</p>
+      <div className="gi-section">
+        <h2>Donations</h2>
+        <p>Your donations fund local community work.</p>
+        <ul>
+          <li><b>£15</b> funds a place on a mindfulness session for someone who couldn&rsquo;t otherwise afford it.</li>
+          <li><b>£200</b> funds a full course for one person.</li>
+          <li><b>£500</b> funds a workshop for up to 30 people in a community or volunteer group.</li>
+        </ul>
+        <p>Every amount helps. Give once, or set up a regular donation to help us plan ahead.</p>
+        <div style={{ textAlign: 'center', margin: '22px 0 4px' }}>
+          <ZeffyEmbed zeffyUrl={ZEFFY_CAMPAIGNS.donate} label="Donate now" />
+        </div>
+      </div>
 
-      <p><b>Fundraising</b> — If you choose to fundraise for WholeMind Resilience, you're directly impacting the lives of people in the community who need support the most. Every pound raised helps us deliver accessible wellbeing programmes to individuals and groups facing disadvantage, pressure or limited access to services. We'd love to hear your ideas — a personal challenge, a whip-round at an event, or help putting a fundraiser together. WholeMind will thank our fundraisers publicly, and share how their contribution made a difference.</p>
+      <div className="gi-section">
+        <h2>Corporate sponsorship</h2>
+        <p>Corporate partners can help us reach more people across the region. Sponsorship doesn&rsquo;t have to mean money: it can be a room to run classes closer to communities, equipment, training places for staff and volunteers, or refreshments for events.</p>
+        <p>All sponsors receive:</p>
+        <ul>
+          <li>your logo on our website</li>
+          <li>a thank-you in our news posts</li>
+          <li>recognition on our social media</li>
+          <li>for support worth over £1,500, an impact report showing how your contribution strengthened wellbeing in local communities</li>
+        </ul>
+      </div>
 
-      <div style={{ textAlign: 'center', marginTop: 30 }}>
-        <p><a href="#/contact" className="text-plum">Contact us to discuss supporting WholeMind Resilience</a></p>
+      <div className="gi-section">
+        <h2>Fundraising</h2>
+        <p>Do you like to raise funds for organisations like ours? Every pound you raise helps us bring wellbeing support to people facing disadvantage. It could be a personal challenge, a whip-round at an event, a company pledge or a fundraiser we help you put together. We&rsquo;ll thank our fundraisers publicly and share the difference they&rsquo;ve made.</p>
+      </div>
+
+      <div style={{ textAlign: 'center', marginTop: 36 }}>
+        <button className="cta-btn outline" onClick={() => go('contact')}>Talk to us about getting involved</button>
       </div>
     </SimplePage>
   );
